@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 
 
 
@@ -13,9 +14,9 @@ export default function Footer() {
                         </div>
 
                         <ul className="footer-menu d-flex flex-wrap ms-5">
-                            <li className="footer-menu-item"><Link href="#" className="footer-menu-link">A propos de nous</Link></li>
+                            <li className="footer-menu-item"><Link to={'/about'} className="footer-menu-link">A propos de nous</Link></li>
 
-                            <li className="footer-menu-item"><Link href="#" className="footer-menu-link">Contacts</Link></li>
+                            <li className="footer-menu-item"><Link to={'/contact'} className="footer-menu-link">Contacts</Link></li>
                         </ul>
                     </div>
 

@@ -6,7 +6,7 @@ export default function NavBar() {
     return (
         <nav className="navbar navbar-expand-lg">
             <div className="container">
-                <Link className="navbar-brand">
+                <Link to={'/'} className="navbar-brand">
                     <img src={logo} className="logo img-fluid" alt="" />
                     <span className="ms-2">NAMBA</span>
                 </Link>
@@ -18,18 +18,18 @@ export default function NavBar() {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item">
-                            <Link className="nav-link active">Acceuil</Link>
+                            <Link to={'/'} className="nav-link active">Acceuil</Link>
                         </li>
 
                         <li className="nav-item">
-                            <Link className="nav-link">A propos de nous</Link>
+                            <Link to={'/about'} className="nav-link">A propos de nous</Link>
                         </li>
 
                         <li className="nav-item dropdown">
                             <Link className="nav-link dropdown-toggle" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pages</Link>
 
                             <ul className="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-                                <li><Link className="dropdown-item">Nos Services</Link></li>
+                                <li><Link to={'/services'} className="dropdown-item">Nos Services</Link></li>
 
                                 <li><Link className="dropdown-item">Coming Soon</Link></li>
 
@@ -38,11 +38,11 @@ export default function NavBar() {
                         </li>
 
                         <li className="nav-item">
-                            <Link className="nav-link">Nos Contacts</Link>
+                            <Link to={'/contact'} className="nav-link">Nos Contacts</Link>
                         </li>
 
                         <li className="nav-item ms-3">
-                            <Link className="nav-link custom-btn custom-border-btn custom-btn-bg-white btn" >Reservez</Link>
+                            <Link to={'/contact'} className="nav-link custom-btn custom-border-btn custom-btn-bg-white btn" >Réservez</Link>
                         </li>
                     </ul>
                 </div>
