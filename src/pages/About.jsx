@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ComponiesWhoTrustInUs from "../components/componies";
+import CompaniesThatTrustUs from "../components/companies";
 
 
 
@@ -123,7 +123,7 @@ export default function About() {
                 </div>
             </section>
 
-            <ComponiesWhoTrustInUs />
+            <CompaniesThatTrustUs />
         </main>
     )
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import ServiceCard from "../components/serviceCard";
 import alldata from '../data.json';
-import ComponiesWhoTrustInUs from "../components/componies";
+import CompaniesThatTrustUs from "../components/companies";
 
 
 
@@ -240,7 +240,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* <ComponiesWhoTrustInUs /> */}
+            <CompaniesThatTrustUs />
         </main>
     )
 }

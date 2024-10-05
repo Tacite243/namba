@@ -1,6 +1,6 @@
 
 
-export default function ComponiesWhoTrustInUs() {
+export default function CompaniesThatTrustUs() {
     return (
         <section className="partners-section">
             <div className="container">
