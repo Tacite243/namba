@@ -1,3 +1,65 @@
-node_modules
-# Keep environment variables out of version control
+# Dossiers et fichiers généraux à ignorer
+node_modules/
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fichiers d'environnement
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dossiers de build
+build/
+dist/
+out/
+
+# Fichiers de cache
+.cache/
+.next/
+
+# Fichiers spécifiques à Next.js
+.next/
+out/
+
+# Fichiers spécifiques à React Native
+.expo/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# Fichiers spécifiques à Android (pour React Native)
+android/app/debug
+android/app/release
+
+# Fichiers spécifiques à iOS (pour React Native)
+ios/Pods/
+ios/build/
+
+# Fichiers de dépendances
+yarn.lock
+package-lock.json
+
+# Fichiers d'IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Fichiers de test de couverture
+coverage/
+
+# Fichiers temporaires
+tmp/
+temp/
+
+# Fichiers de configuration locaux
+*.local
