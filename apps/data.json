@@ -1,0 +1,50 @@
+
+
+{
+    "services" : [
+        {
+            "title": "Netoyage des Tapis",
+            "description": "Nous nettoyons vos tapis jusqu'à ce qu'ils deviennent comme neuf!",
+            "avatar": "/images/services/people-taking-care-office-cleaning.jpg",
+            "hover": "/images/services/person-taking-care-office.jpg",
+            "like": 4,
+            "tarif": {
+                "amount": 5,
+                "unity" : "le kilo"
+            }
+        },
+        {
+            "title": "Lavage de vetements",
+            "description": "Nous nettoyons vos vetements jusqu'à ce qu'ils deviennent comme neuf!",
+            "avatar": "/images/services/young-smiling-woman-wearing-rubber-gloves-cleaning-stove.jpg",
+            "hover": "/images/services/woman-holding-rag-detergent-cleaning-cooker.jpg",
+            "like": 4,
+            "tarif": {
+                "amount": 5,
+                "unity" : "le kilo"
+            }
+        },
+        {
+            "title": "Netoyage des draps, nattes...",
+            "description": "Nous nettoyons vos vetements jusqu'à ce qu'ils deviennent comme neuf!",
+            "avatar": "/images/services/man-polishing-car-inside-car-service.jpg",
+            "hover": "/images/services/man-polishing-car-inside.jpg",
+            "like": 4,
+            "tarif": {
+                "amount": 5,
+                "unity" : "le kilo"
+            }
+        },
+        {
+            "title": "Repassage professionnel",
+            "description": "Nous nettoyons vos vetements jusqu'à ce qu'ils deviennent comme neuf!",
+            "avatar": "/images/services/professional-industrial-cleaner-protective-uniform-cleaning-floor-food-processing-plant.jpg",
+            "hover": "/images/services/close-up-mop-cleaning-industrial-plant-floor.jpg",
+            "like": 4,
+            "tarif": {
+                "amount": 5,
+                "unity" : "le kilo"
+            }
+        }
+    ]
+}

@@ -1,0 +1,3 @@
+packages:
+  - "apps/*"  # Les chemins où PNPM doit gérer les projets
+  - "prisma"
