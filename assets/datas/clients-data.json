@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Marie",
+        "imageUrl": "https://example.com/marie.jpg",
+        "rating": 4,
+        "title": "Best Cleaning Service Provider",
+        "testimonial": "Ipsum dolor sit consectetur kengan"
+    },
+    {
+        "id": 2,
+        "name": "Nana",
+        "imageUrl": "https://example.com/nana.jpg",
+        "rating": 4,
+        "title": "Excellent Service",
+        "testimonial": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore."
+    },
+    {
+        "id": 3,
+        "name": "Elon",
+        "imageUrl": "https://example.com/elon.jpg",
+        "rating": 5,
+        "title": "Highly Recommended",
+        "testimonial": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+    }
+]

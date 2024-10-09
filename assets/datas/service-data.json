@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "title": "Netoyage des Tapis",
+        "description": "Nous nettoyons vos tapis jusqu'à ce qu'ils deviennent comme neuf!",
+        "avatar": "https://images.pexels.com/photos/19899084/pexels-photo-19899084/free-photo-of-empty-kitchen-interior-with-white-furniture.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "hover": "https://images.pexels.com/photos/19899084/pexels-photo-19899084/free-photo-of-empty-kitchen-interior-with-white-furniture.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "like": 4.5,
+        "tarif": {
+            "amount": 5,
+            "unity": "le kilo"
+        }
+    },
+    {
+        "id": 2,
+        "title": "Lavage de vetements",
+        "description": "Nous nettoyons vos vetements jusqu'à ce qu'ils deviennent comme neuf!",
+        "avatar": "https://images.pexels.com/photos/19899084/pexels-photo-19899084/free-photo-of-empty-kitchen-interior-with-white-furniture.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "hover": "https://images.pexels.com/photos/19899084/pexels-photo-19899084/free-photo-of-empty-kitchen-interior-with-white-furniture.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "like": 4,
+        "tarif": {
+            "amount": 5,
+            "unity": "le kilo"
+        }
+    },
+    {
+        "id": 3,
+        "title": "Netoyage des draps, nattes...",
+        "description": "Nous nettoyons vos vetements jusqu'à ce qu'ils deviennent comme neuf!",
+        "avatar": "https://images.pexels.com/photos/19899084/pexels-photo-19899084/free-photo-of-empty-kitchen-interior-with-white-furniture.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "hover": "https://images.pexels.com/photos/19899084/pexels-photo-19899084/free-photo-of-empty-kitchen-interior-with-white-furniture.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "like": 4,
+        "tarif": {
+            "amount": 5,
+            "unity": "le kilo"
+        }
+    },
+    {
+        "id": 4,
+        "title": "Repassage professionnel",
+        "description": "Nous nettoyons vos vetements jusqu'à ce qu'ils deviennent comme neuf!",
+        "avatar": "https://images.pexels.com/photos/19899084/pexels-photo-19899084/free-photo-of-empty-kitchen-interior-with-white-furniture.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "hover": "https://images.pexels.com/photos/19899084/pexels-photo-19899084/free-photo-of-empty-kitchen-interior-with-white-furniture.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "like": 4,
+        "tarif": {
+            "amount": 5,
+            "unity": "le kilo"
+        }
+    }
+]
