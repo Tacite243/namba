@@ -3,17 +3,6 @@
 {
     "services" : [
         {
-            "title": "Netoyage des Tapis",
-            "description": "Nous nettoyons vos tapis jusqu'à ce qu'ils deviennent comme neuf!",
-            "avatar": "/services/people-taking-care-office-cleaning.jpg",
-            "hover": "/services/person-taking-care-office.jpg",
-            "like": 4,
-            "tarif": {
-                "amount": 5,
-                "unity" : "le maitre carré"
-            }
-        },
-        {
             "title": "Lavage des linges",
             "description": "Nous nettoyons vos vetements jusqu'à ce qu'ils deviennent comme neuf!",
             "avatar": "services/young-smiling-woman-wearing-rubber-gloves-cleaning-stove.jpg",
@@ -44,6 +33,28 @@
             "tarif": {
                 "amount": 5,
                 "unity" : "le kilo"
+            }
+        },
+        {
+            "title": "Service personnalisé",
+            "description": "Exprimez ce que vous souhaitez que nous puissions faire pour vous",
+            "avatar": "/services/professional-industrial-cleaner-protective-uniform-cleaning-floor-food-processing-plant.jpg",
+            "hover": "images/services/close-up-mop-cleaning-industrial-plant-floor.jpg",
+            "like": 4,
+            "tarif": {
+                "amount": "personnalisé",
+                "unity" : "personnalisé"
+            }
+        },
+        {
+            "title": "Netoyage des Tapis",
+            "description": "Nous nettoyons vos tapis jusqu'à ce qu'ils deviennent comme neuf!",
+            "avatar": "/services/people-taking-care-office-cleaning.jpg",
+            "hover": "/services/person-taking-care-office.jpg",
+            "like": 4,
+            "tarif": {
+                "amount": 5,
+                "unity" : "le maitre carré"
             }
         }
     ]

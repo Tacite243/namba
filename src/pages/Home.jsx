@@ -4,15 +4,14 @@ import alldata from "../data.json";
 import CompaniesThatTrustUs from "../components/companies";
 import { useNavigate } from "react-router-dom";
 
-
 export default function HomePage() {
   const services = alldata.services;
   const navigate = useNavigate();
 
   const handleCliqueToService = () => {
-    navigate("/services")
-  }
-  
+    navigate("/services");
+  };
+
   return (
     <main>
       <section className="hero-section hero-section-full-height d-flex justify-content-center align-items-center">
@@ -30,9 +29,9 @@ export default function HomePage() {
                 </span>
               </h1>
 
-              <button 
-              className="custom-btn custom-border-btn custom-btn-bg-white btn button button--pan smoothscroll"
-              onClick={handleCliqueToService}
+              <button
+                className="custom-btn custom-border-btn custom-btn-bg-white btn button button--pan smoothscroll"
+                onClick={handleCliqueToService}
               >
                 Voir Nos Services
               </button>
@@ -100,11 +99,9 @@ export default function HomePage() {
             <div className="col-lg-12 col-12">
               <h2 className="mb-4">Nos services !</h2>
             </div>
-
-            <ServiceCard data={services[0]} />
-            <ServiceCard data={services[1]} />
-            <ServiceCard data={services[2]} />
-            <ServiceCard data={services[3]} />
+            {services.map((service, index) => (
+              <ServiceCard key={index} data={service} />
+            ))}
           </div>
         </div>
       </section>
