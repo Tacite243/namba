@@ -115,7 +115,7 @@ export default function Footer() {
 
                             <strong className="d-block text-white mb-1">Lundi - Lundi</strong>
 
-                            <p className="text-white mb-3">8h00 - 17h00</p>
+                            <p className="text-white mb-3">24h/24</p>
                         </div>
                     </div>
                 </div>

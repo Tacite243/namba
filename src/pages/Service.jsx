@@ -9,22 +9,22 @@ export default function Service() {
     return (
         <main>
 
-            <section class="banner-section d-flex justify-content-center align-items-end">
-                <div class="section-overlay"></div>
+            <section className="banner-section d-flex justify-content-center align-items-end">
+                <div className="section-overlay"></div>
 
-                <div class="container">
-                    <div class="row">
+                <div className="container">
+                    <div className="row">
 
-                        <div class="col-lg-7 col-12">
-                            <h1 class="text-white mb-lg-0">Nos Services</h1>
+                        <div className="col-lg-7 col-12">
+                            <h1 className="text-white mb-lg-0">Nos Services</h1>
                         </div>
 
-                        <div class="col-lg-4 col-12 d-flex justify-content-lg-end align-items-center ms-auto">
+                        <div className="col-lg-4 col-12 d-flex justify-content-lg-end align-items-center ms-auto">
                             <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb justify-content-center">
-                                    <li class="breadcrumb-item"><a href="index.html">Accueil</a></li>
+                                <ol className="breadcrumb justify-content-center">
+                                    <li className="breadcrumb-item"><a href="index.html">Accueil</a></li>
 
-                                    <li class="breadcrumb-item active" aria-current="page">Nos Services</li>
+                                    <li className="breadcrumb-item active" aria-current="page">Nos Services</li>
                                 </ol>
                             </nav>
                         </div>
@@ -34,9 +34,9 @@ export default function Service() {
             </section>
 
 
-            <section class="services-section section-padding">
-                <div class="container">
-                    <div class="row">
+            <section className="services-section section-padding">
+                <div className="container">
+                    <div className="row">
 
                         <ServiceCard data={services[0]} />
                         <ServiceCard data={services[1]} />
@@ -46,9 +46,9 @@ export default function Service() {
             </section>
 
 
-            <section class="services-section section-padding section-bg">
-                <div class="container">
-                    <div class="row">
+            <section className="services-section section-padding section-bg">
+                <div className="container">
+                    <div className="row">
 
                         <ServiceCard data={services[2]}/>
                         <ServiceCard data={services[3]}/>

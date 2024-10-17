@@ -10,17 +10,17 @@
             "like": 4,
             "tarif": {
                 "amount": 5,
-                "unity" : "le kilo"
+                "unity" : "le maitre carré"
             }
         },
         {
-            "title": "Lavage de vetements",
+            "title": "Lavage des linges",
             "description": "Nous nettoyons vos vetements jusqu'à ce qu'ils deviennent comme neuf!",
             "avatar": "services/young-smiling-woman-wearing-rubber-gloves-cleaning-stove.jpg",
             "hover": "/services/woman-holding-rag-detergent-cleaning-cooker.jpg",
             "like": 4,
             "tarif": {
-                "amount": 5,
+                "amount": 1,
                 "unity" : "le kilo"
             }
         },
