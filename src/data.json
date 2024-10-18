@@ -7,9 +7,9 @@
             "description": "Nous nettoyons vos vetements jusqu'à ce qu'ils deviennent comme neuf!",
             "avatar": "services/young-smiling-woman-wearing-rubber-gloves-cleaning-stove.jpg",
             "hover": "/services/woman-holding-rag-detergent-cleaning-cooker.jpg",
-            "like": 4,
+            "like": 5,
             "tarif": {
-                "amount": 1,
+                "amount": 2,
                 "unity" : "le kilo"
             }
         },

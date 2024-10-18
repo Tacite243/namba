@@ -35,9 +35,9 @@ export default function Contacts() {
                     <div className="row">
 
                         <div className="col-lg-5 col-12 me-auto mb-lg-0 mb-5">
-                            <h2 className="my-3">Vous servir, c'est notre bonheur !</h2>
+                            <h2 className="my-3">Vous servir, c`est notre bonheur !</h2>
 
-                            <p>Contactez-nous pour savoir plus sur nos offres et services, venez tirer le maximum d'avantages en confiant vos lourdes taches à une équipe qui éprouve du plaisir à vous les alléger !</p>
+                            <p>Contactez-nous pour savoir plus sur nos offres et services, venez tirer le maximum d`avantages en confiant vos lourdes taches à une équipe qui éprouve du plaisir à vous les alléger !</p>
 
                             <div className="contact-info bg-white shadow-lg">
                                 <h3 className="mb-4">Contacts</h3>

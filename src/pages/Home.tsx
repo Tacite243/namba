@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import ServiceCard from "../components/serviceCard";
 import alldata from "../data.json";
@@ -82,7 +83,7 @@ export default function HomePage() {
                 <p className="d-flex mb-0">
                   <i className="bi-telephone-fill custom-icon me-2"></i>
 
-                  <Link href="tel: 110-220-9800">+243 971 736 244</Link>
+                  <Link to="tel: 110-220-9800">+243 971 736 244</Link>
                 </p>
               </div>
             </div>
