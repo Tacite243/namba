@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.1",
+    "JSON": "^1.0.0",
+    "token": "^0.1.0",
+    "web": "^0.0.2"
+  }
+}
