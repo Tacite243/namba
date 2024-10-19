@@ -4,6 +4,16 @@
 node_modules
 .pnp
 .pnp.js
+.pnpm/
+dist/
+build/
+coverage/
+
+# React Native
+android/.gradle/
+android/app/build/
+ios/Pods/
+ios/build/
 
 # Local env files
 .env
@@ -11,6 +21,10 @@ node_modules
 .env.development.local
 .env.test.local
 .env.production.local
+
+# macOS
+.DS_Store
+
 
 # Testing
 coverage
@@ -27,6 +41,13 @@ out/
 build
 dist
 
+# Logs
+logs/
+*.log
+pids/
+*.pid
+*.seed
+*.pid.lock
 
 # Debug
 npm-debug.log*
