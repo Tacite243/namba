@@ -11,7 +11,7 @@ export default function Header() {
 
                         <p className="d-flex me-4 mb-0">
                             <i className="bi-house-fill me-2"></i>
-                            Le meuilleur Service de Pressing d'Afrique
+                            Le meuilleur Service de Pressing d&apos;Afrique
                         </p>
 
                         <p className="d-flex d-lg-block d-md-block d-none me-4 mb-0">
