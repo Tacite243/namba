@@ -8,12 +8,16 @@ exports.registerUser = async (username, phoneNumber, password) => {
     const hashedPassword = await hashPassword(password);
     return db.user.create({
         data: {
-            username,
-            phoneNumber,
+            username: username,
+            phoneNumber: phoneNumber,
             password: hashedPassword
         }
     })
 };
+
+exports.generateToken = (user) => {
+    return generateToken(user);
+}
 
 exports.loginUser = async (phoneNumber, password) => {
     const user = await db.user.findUnique({
