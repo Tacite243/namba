@@ -5,11 +5,12 @@ import { loginUser } from '../../redux/authSlice';
 
 export default function Login() {
   const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const dispatch = useDispatch();
 
   const handleLogin = () => {
-    dispatch(loginUser(phone, password));
+    console.log(phoneNumber, password);    
+    dispatch(loginUser(phoneNumber, password));
   };
 
   return (
@@ -18,8 +19,8 @@ export default function Login() {
       <TextInput
         style={styles.input}
         placeholder="Numéro de téléphone"
-        value={phone}
-        onChangeText={setPhone}
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
         autoCapitalize="none"
         keyboardType="phone-pad"
       />

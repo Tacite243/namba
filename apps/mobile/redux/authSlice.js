@@ -1,4 +1,3 @@
-// redux/authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 import authService from '../services/authService';
 import { storeToken, getToken } from '../utils/Storage'
@@ -20,9 +19,9 @@ const authSlice = createSlice({
 
 export const { setToken, clearToken } = authSlice.actions;
 
-export const loginUser = (email, password) => async (dispatch) => {
+export const loginUser = (phoneNumber, password) => async (dispatch) => {
   try {
-    const token = await authService.login(email, password);
+    const token = await authService.login(phoneNumber, password);
     await storeToken(token);  // Stocke le token dans AsyncStorage
     dispatch(setToken(token));
   } catch (error) {

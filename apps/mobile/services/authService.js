@@ -1,11 +1,10 @@
-// services/authService.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/auth';
+const API_URL = 'http://localhost:3000/auth';
 
-const login = async (email, password) => {
-  const response = await axios.post(`${API_URL}/login`, { email, password });
-  return response.data.token; // Récupère le token depuis la réponse
+const login = async (phoneNumber, password) => {
+  const response = await axios.get(`${API_URL}/login`, { phoneNumber, password });
+  return response.data.token;
 };
 
 const logout = async () => {
