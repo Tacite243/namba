@@ -20,6 +20,9 @@ exports.generateToken = (user) => {
 }
 
 exports.loginUser = async (phoneNumber, password) => {
+    if (!phoneNumber) {
+        throw new Error("Le numéro de téléphone est requis.");
+    }
     const user = await db.user.findUnique({
         where: { phoneNumber: phoneNumber }
     });

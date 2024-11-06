@@ -7,6 +7,6 @@ const { validationRegistration } = require("../middlewares/validationMiddleware"
 const { verifyToken } = require("../utils/jwt");
 
 router.post("/register", authController.register);
-router.get("/login", authController.login);
+router.post("/login", authController.login);
 
 module.exports = router;
