@@ -10,6 +10,7 @@ body {
     background-color: #F9F9F9;
 }
 
+/* AuthPopup.css */
 .auth-popup-overlay {
     position: fixed;
     top: 0;
@@ -21,38 +22,37 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 1000;
-  }
+}
 
-  .auth-popup-content {
+.auth-popup-content {
     background: white;
-    padding: 30px; 
+    padding: 30px;
     width: 80%;
-    max-width: 600px; 
+    max-width: 600px;
     height: auto;
     border-radius: 15px;
     position: relative;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
-    overflow-y: auto; 
-  }
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
 
-  .auth-popup-content input {
+.auth-popup-content input {
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 16px; 
+    font-size: 16px;
     background-color: #f9f9f9;
     transition: border-color 0.3s;
-  }
-  
-  .auth-popup-content input:focus {
+}
+
+.auth-popup-content input:focus {
     border-color: #007bff;
     outline: none;
-  }
-  
-  /* Bouton de soumission */
-  .auth-popup-content button {
+}
+
+.auth-popup-content button[type="submit"] {
     width: 100%;
     padding: 12px;
     background-color: #007bff;
@@ -62,15 +62,13 @@ body {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  /* Hover sur le bouton */
-  .auth-popup-content button:hover {
+}
+
+.auth-popup-content button[type="submit"]:hover {
     background-color: #0056b3;
-  }
-  
-  /* Lien */
-  .auth-popup-content .link {
+}
+
+.auth-popup-content .link {
     color: #007bff;
     text-align: center;
     display: block;
@@ -78,48 +76,46 @@ body {
     font-size: 14px;
     text-decoration: none;
     cursor: pointer;
-  }
-  
-  /* Hover sur le lien */
-  .auth-popup-content .link:hover {
+}
+
+.auth-popup-content .link:hover {
     text-decoration: underline;
-  }
-  
-  /* Bouton de fermeture discret */
-  .close-btn {
+}
+
+.close-btn {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 10px; 
+    right: 5px; 
+    width: 10%;
+    text-align: center;
     background: none;
     border: none;
-    font-size: 20px; 
+    font-size: 20px;
     color: rgba(0, 0, 0, 0.3);
     cursor: pointer;
     opacity: 0.7;
     transition: opacity 0.3s, color 0.3s;
-  }
-  
-  .close-btn:hover {
+}
+
+.close-btn:hover {
     opacity: 1;
     color: #ff0000;
-  }
-  
-  /* Responsivité */
-  @media (max-width: 768px) {
+}
+
+@media (max-width: 768px) {
     .auth-popup-content {
-      width: 90%;
-      padding: 20px;
+        width: 90%;
+        padding: 20px;
     }
-  
-    .auth-popup-content input, .auth-popup-content button {
-      font-size: 14px; 
-      padding: 10px;
+
+    .auth-popup-content input, .auth-popup-content button[type="submit"] {
+        font-size: 14px;
+        padding: 10px;
     }
-  
+
     .close-btn {
-      top: 10px;
-      right: 10px;
-      font-size: 18px; 
+        top: 10px;
+        right: 10px;
+        font-size: 18px;
     }
-  }
-  
+}

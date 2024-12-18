@@ -17,7 +17,7 @@ export default function AuthPopup({ closePopup }) {
 
         {isSignIn ? (
           <form className="auth-form">
-            <input type="email" placeholder="Email" required />
+            <input type="text" placeholder="Nom d'utilisateur" required />
             <input type="password" placeholder="Mot de passe" required />
             <button type="submit">Se connecter</button>
             <p>
@@ -29,8 +29,8 @@ export default function AuthPopup({ closePopup }) {
           </form>
         ) : (
           <form className="auth-form">
-            <input type="text" placeholder="Nom" required />
-            <input type="email" placeholder="Email" required />
+            <input type="text" placeholder="Nom d'utilisateur" required />
+            <input type="email" placeholder="Email" />
             <input type="password" placeholder="Mot de passe" required />
             <button type="submit">S'inscrire</button>
             <p>
