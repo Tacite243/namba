@@ -3,6 +3,7 @@ import HomePage from "../pages/Home";
 import Contacts from "../pages/Contats";
 import About from "../pages/About";
 import Service from "../pages/Service";
+import CollectorPage from "../Collector/homeCollector";
 
 
 export default function AppRoutes() {
@@ -12,6 +13,7 @@ export default function AppRoutes() {
             <Route path="/contact" element={<Contacts />} />
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Service />} />
+            <Route path="/gatherer/home" element={<CollectorPage />} />
         </Routes>
     )
 }
