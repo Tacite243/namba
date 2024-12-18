@@ -1,0 +1,24 @@
+{
+  "name": "namba_mono_repo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "packageManager": "npm@9.8.1",
+  "dependencies": {
+    "npm": "^11.0.0",
+    "turbo": "^2.3.3"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.11"
+  }
+}
