@@ -25,7 +25,7 @@ const CollectorPage = () => {
   return (
     <div className="collector-page section-bg section-padding">
       <div className="container">
-        <h1 className="page-title">Collecteur d'Habits</h1>
+        <h1 className="page-title">Collecteur</h1>
 
         {/* Disponibilité Toggle */}
         <div className="availability-toggle">
