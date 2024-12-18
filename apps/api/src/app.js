@@ -3,11 +3,8 @@ import * as dotevnv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-// import routes from "./routes/routes";
+import routes from "./routes/routes.js";
 import vars from "./utils/vars.js";
-// import BackupDatabase from "./utils/BackupDatabase";
-// import path from "path";
-// import AproposCtrl from "./web_manager/controllers/AproposCtrl";
 
 dotevnv.config();
 
@@ -24,7 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
-// app.use("/api", routes);
+
+app.use("/api", routes);
 
 app.all("*", (req, res) => {
   vars.setResponse(

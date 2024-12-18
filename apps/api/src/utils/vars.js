@@ -1,3 +1,5 @@
+import bcrypt from "bcryptjs";
+
 const status = {
   CONTINUE: { code: 100, message: "Continue" },
   SWITCHING_PROTOCOLS: { code: 101, message: "Switching Protocols" },
@@ -85,4 +87,11 @@ const setResponse = (res, message, status, data = {}, logs = null) => {
     .end();
 };
 
-export default { setResponse, status };
+export const encryptPassword = async (password) => {
+  const saltRounds = 10;
+  const salt = await bcrypt.genSalt(saltRounds);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  return hashedPassword;
+};
+
+export default { setResponse, status, encryptPassword };
