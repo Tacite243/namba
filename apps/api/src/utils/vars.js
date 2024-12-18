@@ -1,4 +1,7 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 const status = {
   CONTINUE: { code: 100, message: "Continue" },
@@ -94,4 +97,10 @@ export const encryptPassword = async (password) => {
   return hashedPassword;
 };
 
-export default { setResponse, status, encryptPassword };
+function generateToken(id, role) {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+    expiresIn: "2190h",
+  });
+}
+
+export default { setResponse, status, encryptPassword, generateToken };
