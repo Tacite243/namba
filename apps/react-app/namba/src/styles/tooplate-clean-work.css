@@ -1481,6 +1481,122 @@ strong {
   transform: translate3d(0,100%,0);
 }
 
+/*---------------------------------------
+  Collector section
+-----------------------------------------*/
+
+.collector-page {
+  font-family: var(--body-font-family);
+}
+
+.page-title {
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: 30px;
+}
+
+.availability-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.toggle-label {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggle-label input {
+  display: none;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--border-color);
+  transition: 0.4s;
+  border-radius: var(--border-radius-medium);
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--white-color);
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+.orders-section {
+  margin-bottom: 40px;
+}
+
+.orders-list {
+  list-style: none;
+  padding: 0;
+}
+
+.orders-list li {
+  background: var(--section-bg-color);
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  border-radius: var(--border-radius-small);
+  border: 1px solid var(--border-color);
+}
+
+.profile-section {
+  margin-top: 40px;
+}
+
+.profile-form .form-group {
+  margin-bottom: 20px;
+}
+
+.profile-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--dark-color);
+}
+
+.profile-form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+}
+
+.custom-btn {
+  background-color: var(--custom-btn-bg-color);
+  color: var(--white-color);
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--border-radius-medium);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.custom-btn:hover {
+  background-color: var(--custom-btn-bg-hover-color);
+}
+
 
 /*---------------------------------------
   RESPONSIVE STYLES               
