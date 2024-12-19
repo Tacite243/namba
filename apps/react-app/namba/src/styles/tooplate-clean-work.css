@@ -1656,15 +1656,15 @@ input:checked+.toggle-slider:before {
   height: 15px;
   background-color: #1da1f2;
   border-radius: 50%;
-  animation: bounce 0.6s infinite ease-in-out;
+  animation: bounce 0.5s infinite ease-in-out;
 }
 
 .loader span:nth-child(2) {
-  animation-delay: 0.2s;
+  animation-delay: 0.1s;
 }
 
 .loader span:nth-child(3) {
-  animation-delay: 0.4s;
+  animation-delay: 0.3s;
 }
 
 /* Bounce animation */
@@ -1865,5 +1865,117 @@ input:checked+.toggle-slider:before {
 
   h5 {
     font-size: 20px;
+  }
+}
+
+
+/*----------------------------
+  Admin dashboard
+------------------------------*/
+
+.admin-dashboard {
+  margin-top: 20vh;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--white-color);
+}
+
+.dashboard-title {
+  text-align: center;
+  color: var(--dark-color);
+  font-size: var(--h2-font-size);
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: var(--h3-font-size);
+  color: var(--dark-color);
+  margin-bottom: 10px;
+}
+
+.orders-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--white-color);
+}
+
+.orders-table th,
+.orders-table td {
+  text-align: left;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.orders-table th {
+  background-color: var(--secondary-color);
+  color: var(--white-color);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-icon {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.collectors-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.collector-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--white-color);
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: var(--border-radius-small);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.collector-name {
+  font-weight: bold;
+}
+
+.status {
+  font-size: var(--p-font-size);
+}
+
+.status.available {
+  color: var(--primary-color);
+}
+
+.status.unavailable {
+  color: var(--dark-color);
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--custom-btn-bg-color);
+}
+
+/* Responsivité */
+@media (max-width: 768px) {
+  .orders-table table {
+    font-size: 14px;
+  }
+
+  .collector-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .actions {
+    flex-direction: column;
   }
 }
