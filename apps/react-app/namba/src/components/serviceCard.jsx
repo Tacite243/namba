@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import AuthPopup from "./AuthPopup"; // Importer le composant AuthPopup
+import AuthPopup from "../client/AuthPopup"; // Importer le composant AuthPopup
 
 export default function ServiceCard({ data }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
