@@ -55,6 +55,35 @@ const createAccount = [
     ),
 ];
 
+const signin = [
+  body("username")
+    .notEmpty()
+    .withMessage("Le nom d'utilisateur est requis")
+    .isLength({ min: 4, max: 15 })
+    .withMessage("Le nom d'utilisateur doit contenir entre 4 et 15 caractères"),
+
+  body("email")
+    .optional()
+    .isEmail()
+    .withMessage("Veuillez fournir une adresse email valide"),
+
+  body("password")
+    .notEmpty()
+    .withMessage("Le mot de passe est requis")
+    .isLength({ min: 8 })
+    .withMessage("Le mot de passe doit contenir au moins 8 caractères")
+    .matches(/[A-Z]/)
+    .withMessage("Le mot de passe doit contenir au moins une lettre majuscule")
+    .matches(/[a-z]/)
+    .withMessage("Le mot de passe doit contenir au moins une lettre minuscule")
+    .matches(/\d/)
+    .withMessage("Le mot de passe doit contenir au moins un chiffre")
+    .matches(/[@$!%*?&#]/)
+    .withMessage(
+      "Le mot de passe doit contenir au moins un caractère spécial (@, $, !, %, *, ?, &, #)"
+    ),
+];
+
 const ValidateData = (TabValidator) => [TabValidator, ValidateFields];
 
-export default { ValidateData, createAccount };
+export default { ValidateData, createAccount, signin };

@@ -97,10 +97,21 @@ export const encryptPassword = async (password) => {
   return hashedPassword;
 };
 
+const verifyPassword = async (password, hashedPassword) => {
+  const isMatch = await bcrypt.compare(password, hashedPassword);
+  return isMatch;
+};
+
 function generateToken(id, role) {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
     expiresIn: "2190h",
   });
 }
 
-export default { setResponse, status, encryptPassword, generateToken };
+export default {
+  setResponse,
+  status,
+  encryptPassword,
+  generateToken,
+  verifyPassword,
+};
