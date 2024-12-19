@@ -1,13 +1,16 @@
 import { Link } from "react-router-dom";
 import logo from "/bubbles.png";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function NavBar() {
+  const { isAuthenticated, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <nav className="navbar navbar-expand-lg">
       <div className="container">
@@ -29,23 +32,24 @@ export default function NavBar() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div 
-            className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`}
-            style={{
-                width: isOpen ? '75%' : '0',
-                transition: 'width O.3s'}}
-            id="navbarNav"
+        <div
+          className={`collapse navbar-collapse ${isOpen ? "show" : ""}`}
+          style={{
+            width: isOpen ? "75%" : "0",
+            transition: "width 0.3s",
+          }}
+          id="navbarNav"
         >
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
               <Link to={"/"} className="nav-link active">
-                Acceuil
+                Accueil
               </Link>
             </li>
 
             <li className="nav-item">
               <Link to={"/about"} className="nav-link">
-                A propos de nous
+                À propos de nous
               </Link>
             </li>
 
@@ -69,11 +73,9 @@ export default function NavBar() {
                     Nos Services
                   </Link>
                 </li>
-
                 <li>
                   <Link className="dropdown-item">Coming Soon</Link>
                 </li>
-
                 <li>
                   <Link className="dropdown-item">Page 404</Link>
                 </li>
@@ -86,14 +88,25 @@ export default function NavBar() {
               </Link>
             </li>
 
-            <li className="nav-item ms-3">
-              <Link
-                to={"/contact"}
-                className="nav-link custom-btn custom-border-btn custom-btn-bg-white btn"
-              >
-                Réservez
-              </Link>
-            </li>
+            {isAuthenticated ? (
+              <li className="nav-item ms-3">
+                <button
+                  onClick={logout}
+                  className="nav-link custom-btn custom-border-btn custom-btn-bg-white btn"
+                >
+                  Déconnexion
+                </button>
+              </li>
+            ) : (
+              <li className="nav-item ms-3">
+                <Link
+                  to={"/login"}
+                  className="nav-link custom-btn custom-border-btn custom-btn-bg-white btn"
+                >
+                  Connexion
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>
