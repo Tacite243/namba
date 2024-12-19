@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import AuthPopup from "../client/AuthPopup"; // Importer le composant AuthPopup
+import { useAuth } from "../context/AuthContext";
+import AuthPopup from "../client/AuthPopup";
 
 export default function ServiceCard({ data }) {
+  const { isAuthenticated } = useAuth();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const openPopup = () => {
-    setIsPopupOpen(true);
+    if (!isAuthenticated) {
+      setIsPopupOpen(true);
+    }
   };
 
   const closePopup = () => {
@@ -72,7 +76,7 @@ export default function ServiceCard({ data }) {
         </div>
       </div>
 
-      {isPopupOpen && <AuthPopup closePopup={closePopup} />}
+      {!isAuthenticated && isPopupOpen && <AuthPopup closePopup={closePopup} />}
     </div>
   );
 }
