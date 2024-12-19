@@ -25,8 +25,8 @@ export default function App() {
   return (
     <>
       {loading ? <Preloader /> : <>
-        {/* <Header />
-        <NavBar /> */}
+        <Header />
+        <NavBar />
         <AppRoutes />
         <Footer />
       </>}
