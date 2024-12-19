@@ -3,7 +3,7 @@ import * as dotevnv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import routes from "./routes/routes.js";
+import routes from "./routes/user.js";
 import vars from "./utils/vars.js";
 
 dotevnv.config();
