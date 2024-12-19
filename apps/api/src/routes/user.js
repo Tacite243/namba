@@ -10,4 +10,10 @@ routes.post(
   user.create
 );
 
+routes.post(
+  "/signin",
+  validation.ValidateData(validation.signin),
+  user.connexion
+);
+
 export default routes;

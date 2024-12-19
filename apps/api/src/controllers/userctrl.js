@@ -67,4 +67,65 @@ const create = async (req, res) => {
   }
 };
 
-export default { create };
+const connexion = async (req, res) => {
+  const { username, password } = req.body;
+
+  // Validation initiale
+  if (!username || !password) {
+    return vars.setResponse(
+      res,
+      "Le nom d'utilisateur et le mot de passe sont obligatoires",
+      vars.status.BAD_REQUEST.code
+    );
+  }
+
+  try {
+    // Vérification des doublons
+    const verifyUserName = await prisma.user.findUnique({
+      where: { username },
+    });
+
+    if (!verifyUserName) {
+      return vars.setResponse(
+        res,
+        `L'utilisateur ${user} n'existe pas`,
+        vars.status.NOT_FOUND.code
+      );
+    }
+
+    const isMatch = await vars.verifyPassword(
+      password,
+      verifyUserName.password
+    );
+
+    if (!isMatch) {
+      return vars.setResponse(
+        res,
+        vars.status.UNAUTHORIZED.message,
+        vars.status.UNAUTHORIZED.code
+      );
+    }
+
+    const token = vars.generateToken(verifyUserName.id, verifyUserName.role);
+
+    console.log("VERIFICATION CODE : " + verifyUserName.password);
+    return vars.setResponse(
+      res,
+      vars.status.SUCCESS.message,
+      vars.status.SUCCESS.code,
+      { token }
+    );
+  } catch (error) {
+    console.error("Erreur lors de la connexion de l'utilisateur :", error);
+
+    // Gestion des erreurs internes
+    return vars.setResponse(
+      res,
+      vars.status.INTERNAL_SERVER_ERROR.message,
+      vars.status.INTERNAL_SERVER_ERROR.code,
+      error
+    );
+  }
+};
+
+export default { create, connexion };
