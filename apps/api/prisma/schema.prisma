@@ -13,16 +13,57 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  ADMIN
-  USER
-  GATHERER
+model User {
+  id             String         @id @default(uuid())
+  username       String         @unique
+  email          String?        @unique
+  password       String
+  name           String?
+  role           Role           @default(USER)
+  location       Location?
+  Availability   Availability[]
+  OrderClient    Order[]        @relation("ClientOrders")
+  OrderCollector Order[]        @relation("CollectorOrders")
 }
 
-model User {
-  id       String  @id @default(uuid())
-  username String  @unique
-  email    String? @unique
-  password String
-  role     Role    @default(USER)
+model Location {
+  id        String  @id @default(cuid())
+  latitude  Float
+  longitude Float
+  userId    String? @unique
+  user      User?   @relation(fields: [userId], references: [id])
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  clientId    String
+  client      User        @relation("ClientOrders", fields: [clientId], references: [id])
+  status      OrderStatus @default(PENDING)
+  collectorId String?
+  collector   User?       @relation("CollectorOrders", fields: [collectorId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Availability {
+  id        String  @id @default(cuid())
+  userId    String
+  available Boolean @default(false)
+  latitude  Float
+  longitude Float
+  User      User    @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  USER
+  COLLECTOR
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  ASSIGNED
+  COMPLETED
+  CANCELED
+  DONE
 }

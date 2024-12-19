@@ -46,13 +46,6 @@ const createAccount = [
     .withMessage(
       "Le mot de passe doit contenir au moins un caractère spécial (@, $, !, %, *, ?, &, #)"
     ),
-
-  body("role")
-    .optional() // Le rôle est optionnel
-    .isIn(["ADMIN", "USER", "GATHERER"])
-    .withMessage(
-      "Le rôle doit être l'un des suivants : ADMIN, USER ou GATHERER"
-    ),
 ];
 
 const signin = [
@@ -84,6 +77,20 @@ const signin = [
     ),
 ];
 
+const createCollector = [
+  body("username")
+    .notEmpty()
+    .withMessage("Le nom d'utilisateur est requis")
+    .isLength({ min: 4, max: 15 })
+    .withMessage("Le nom d'utilisateur doit contenir entre 4 et 15 caractères"),
+
+  body("name")
+    .notEmpty()
+    .withMessage("Le nom du collecteur est requis")
+    .isLength({ min: 4, max: 15 })
+    .withMessage("Le nom du collectuer doit contenir entre 4 et 15 caractères"),
+];
+
 const ValidateData = (TabValidator) => [TabValidator, ValidateFields];
 
-export default { ValidateData, createAccount, signin };
+export default { ValidateData, createAccount, signin, createCollector };

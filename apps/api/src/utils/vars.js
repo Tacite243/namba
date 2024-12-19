@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import prisma from "./prisma.config.js";
 dotenv.config();
 
 const status = {
@@ -108,10 +109,56 @@ function generateToken(id, role) {
   });
 }
 
+const authRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (allowedRoles.includes(req.user.role)) {
+      next();
+    } else {
+      setResponse(
+        res,
+        "Vous n'avez pas les droits pour accéder à cette route",
+        status.FORBIDDEN.code
+      );
+    }
+  };
+};
+
+async function AuthToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    setResponse(res, status.FORBIDDEN.message, status.FORBIDDEN.code);
+  } else {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
+      if (err) {
+        setResponse(res, status.FORBIDDEN.message, status.FORBIDDEN.code);
+      } else {
+        await prisma.user
+          .findFirst({ where: { id: user.id } })
+          .then((userlogin) => {
+            if (userlogin) {
+              req.user = user;
+              next();
+            } else {
+              setResponse(res, status.FORBIDDEN.message, status.FORBIDDEN.code);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            setResponse(res, status.FORBIDDEN.message, status.FORBIDDEN.code);
+          });
+      }
+    });
+  }
+}
+
 export default {
   setResponse,
   status,
   encryptPassword,
   generateToken,
   verifyPassword,
+  authRoles,
+  AuthToken,
 };
