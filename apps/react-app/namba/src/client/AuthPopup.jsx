@@ -26,22 +26,23 @@ const AuthPopup = ({ closePopup }) => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\S+$).{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isSignIn) {
-      const passwordRegex =
-        /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\S+$).{8,}$/;
-      if (!formData.password.match(passwordRegex)) {
-        setErrorMessage(
-          "Le mot de passe doit contenir au moins 8 caractères, un chiffre, une majuscule et une minuscule, et ne doit pas contenir d'espaces."
-        );
-        return;
-      }
-    }
-
     if (!formData.username || !formData.password) {
       setErrorMessage("Le nom d'utilisateur et le mot de passe sont requis.");
+      return;
+    }
+
+    if (!isSignIn && !validatePassword(formData.password)) {
+      setErrorMessage(
+        "Le mot de passe doit contenir au moins 8 caractères, un chiffre, une majuscule, une minuscule, et ne pas contenir d'espaces."
+      );
       return;
     }
 
@@ -58,12 +59,16 @@ const AuthPopup = ({ closePopup }) => {
         payload
       );
 
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
+      if (response.data.data && response.data.data.token) {
+        localStorage.setItem("token", response.data.data.token);
+
         login();
         alert(isSignIn ? "Connexion réussie !" : "Inscription réussie !");
         closePopup();
         navigate("/services");
+      } else {
+        console.error("Aucun token trouvé dans la réponse.");
+        setErrorMessage("Une erreur est survenue. Veuillez réessayer.");
       }
     } catch (error) {
       if (error.response) {
@@ -71,14 +76,13 @@ const AuthPopup = ({ closePopup }) => {
           setErrorMessage("Nom d'utilisateur ou mot de passe incorrect.");
         } else if (error.response.status === 400 && !isSignIn) {
           if (error.response.data.error === "User already exists") {
-            setErrorMessage("Ce nom d'utilisateur existe déjà.");
+            alert(
+              "Cet utilisateur existe déjà. Veuillez essayer de vous connecter."
+            );
+            handleSwitchForm();
           } else {
             setErrorMessage(error.response.data.error || "Erreur inconnue.");
           }
-        } else if (error.response.status === 409 && !isSignIn) {
-          setErrorMessage("Cet email est déjà utilisé.");
-        } else if (error.response.status === 400 && isSignIn) {
-          setErrorMessage("Nom d'utilisateur ou mot de passe incorrect.");
         }
       } else {
         console.error("Erreur réseau ou serveur :", error.message);
