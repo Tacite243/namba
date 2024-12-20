@@ -99,6 +99,12 @@ const createOrder = [
   body("latitude").notEmpty().withMessage("La latitude est requise"),
 ];
 
+const available = [
+  body("longitude").notEmpty().withMessage("La longitude est requise"),
+
+  body("latitude").notEmpty().withMessage("La latitude est requise"),
+];
+
 const assigned = [
   body("collectorId").notEmpty().withMessage("Le collecteur est requis"),
 ];
@@ -112,4 +118,5 @@ export default {
   createCollector,
   createOrder,
   assigned,
+  available,
 };
