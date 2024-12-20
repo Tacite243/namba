@@ -2,13 +2,23 @@ import { Link } from "react-router-dom";
 import logo from "/bubbles.png";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import AuthPopup from "../client/AuthPopup"; // Importer le composant AuthPopup
 
 export default function NavBar() {
   const { isAuthenticated, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // État pour ouvrir le popup
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
   };
 
   return (
@@ -99,17 +109,19 @@ export default function NavBar() {
               </li>
             ) : (
               <li className="nav-item ms-3">
-                <Link
-                  to={"/login"}
+                <button
+                  onClick={openPopup}
                   className="nav-link custom-btn custom-border-btn custom-btn-bg-white btn"
                 >
                   Connexion
-                </Link>
+                </button>
               </li>
             )}
           </ul>
         </div>
       </div>
+
+      {isPopupOpen && <AuthPopup closePopup={closePopup} />}
     </nav>
   );
 }

@@ -46,7 +46,7 @@ const AuthPopup = ({ closePopup }) => {
       return;
     }
 
-    const endpoint = isSignIn ? "/api/signin" : "/api/user";
+    const endpoint = isSignIn ? "/api/user/login" : "/api/user/signup";
     const payload = {
       username: formData.username,
       password: formData.password,
