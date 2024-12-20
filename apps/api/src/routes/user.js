@@ -3,15 +3,15 @@ import user from "../controllers/userctrl.js";
 import validation from "../utils/validation.js";
 import vars from "../utils/vars.js";
 
-const routes = express.Router();
+const userRoutes = express.Router();
 
-routes.post(
-  "/user/signup",
+userRoutes.post(
+  "/signup",
   validation.ValidateData(validation.createAccount),
   user.create
 );
 
-routes.post(
+userRoutes.post(
   "/collector",
   validation.ValidateData(validation.createCollector),
   vars.AuthToken,
@@ -19,33 +19,33 @@ routes.post(
   user.createCollector
 );
 
-routes.post(
-  "/user/login",
+userRoutes.post(
+  "/login",
   validation.ValidateData(validation.signin),
   user.connexion
 );
 
-routes.get("/user", vars.AuthToken, vars.authRoles("ADMIN"), user.getUsers);
+userRoutes.get("/user", vars.AuthToken, vars.authRoles("ADMIN"), user.getUsers);
 
-routes.get(
-  "/user/:id",
+userRoutes.get(
+  "/:id",
   vars.AuthToken,
   vars.authRoles("ADMIN", "USER"),
   user.getOneUser
 );
 
-routes.get(
+userRoutes.get(
   "/collector",
   vars.AuthToken,
   vars.authRoles("ADMIN"),
   user.getCollectors
 );
 
-routes.get(
+userRoutes.get(
   "/collector/:id",
   vars.AuthToken,
   vars.authRoles("ADMIN", "COLLECTOR"),
   user.getOneCollector
 );
 
-export default routes;
+export default userRoutes;

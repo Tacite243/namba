@@ -68,10 +68,10 @@ const create = async (req, res) => {
 };
 
 const createCollector = async (req, res) => {
-  const { username, email, password, name } = req.body;
+  const { username, phone, name } = req.body;
 
   // Validation initiale
-  if (!username || !name) {
+  if (!username || !name || !phone) {
     return vars.setResponse(
       res,
       "Le nom d'utilisateur et le mot de passe sont obligatoires",
@@ -92,19 +92,22 @@ const createCollector = async (req, res) => {
         vars.status.CONFLICT.code
       );
     }
-    const passwordHash = await vars.encryptPassword(username);
+
+    const defaultPassword = username + "@123Namba";
+    const passwordHash = await vars.encryptPassword(defaultPassword);
 
     // Création de l'utilisateur
     const user = await prisma.user.create({
       data: {
         username,
-        email: email,
+        name,
+        phone,
         password: passwordHash,
         role: "COLLECTOR",
       },
       select: {
         username: true,
-        email: true,
+        phone: true,
         role: true,
         name: true,
       },
@@ -198,6 +201,7 @@ const getUsers = async (req, res) => {
       select: {
         id: true,
         username: true,
+        phone: true,
         email: true,
         name: true,
       },
@@ -276,7 +280,7 @@ const getCollectors = async (req, res) => {
       select: {
         id: true,
         username: true,
-        email: true,
+        phone: true,
         name: true,
       },
     });

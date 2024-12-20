@@ -19,6 +19,7 @@ model User {
   email          String?        @unique
   password       String
   name           String?
+  phone          String?
   role           Role           @default(USER)
   location       Location?
   Availability   Availability[]
@@ -63,6 +64,7 @@ enum Role {
 enum OrderStatus {
   PENDING
   ASSIGNED
+  RECEIVED
   COMPLETED
   CANCELED
   DONE

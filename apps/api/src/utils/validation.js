@@ -91,6 +91,25 @@ const createCollector = [
     .withMessage("Le nom du collectuer doit contenir entre 4 et 15 caractères"),
 ];
 
+const createOrder = [
+  body("phone").notEmpty().withMessage("Le nom d'utilisateur est requis"),
+
+  body("longitude").notEmpty().withMessage("La longitude est requise"),
+
+  body("latitude").notEmpty().withMessage("La latitude est requise"),
+];
+
+const assigned = [
+  body("collectorId").notEmpty().withMessage("Le collecteur est requis"),
+];
+
 const ValidateData = (TabValidator) => [TabValidator, ValidateFields];
 
-export default { ValidateData, createAccount, signin, createCollector };
+export default {
+  ValidateData,
+  createAccount,
+  signin,
+  createCollector,
+  createOrder,
+  assigned,
+};
