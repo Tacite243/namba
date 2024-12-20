@@ -1,19 +1,51 @@
 import express from "express";
 import user from "../controllers/userctrl.js";
 import validation from "../utils/validation.js";
+import vars from "../utils/vars.js";
 
-const routes = express.Router();
+const userRoutes = express.Router();
 
-routes.post(
-  "/user",
+userRoutes.post(
+  "/signup",
   validation.ValidateData(validation.createAccount),
   user.create
 );
 
-routes.post(
-  "/signin",
+userRoutes.post(
+  "/collector",
+  validation.ValidateData(validation.createCollector),
+  vars.AuthToken,
+  vars.authRoles("ADMIN"),
+  user.createCollector
+);
+
+userRoutes.post(
+  "/login",
   validation.ValidateData(validation.signin),
   user.connexion
 );
 
-export default routes;
+userRoutes.get("/user", vars.AuthToken, vars.authRoles("ADMIN"), user.getUsers);
+
+userRoutes.get(
+  "/:id",
+  vars.AuthToken,
+  vars.authRoles("ADMIN", "USER"),
+  user.getOneUser
+);
+
+userRoutes.get(
+  "/collector",
+  vars.AuthToken,
+  vars.authRoles("ADMIN"),
+  user.getCollectors
+);
+
+userRoutes.get(
+  "/collector/:id",
+  vars.AuthToken,
+  vars.authRoles("ADMIN", "COLLECTOR"),
+  user.getOneCollector
+);
+
+export default userRoutes;
