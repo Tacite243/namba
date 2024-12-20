@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+// Popup
 const AuthPopup = ({ closePopup }) => {
   const [isSignIn, setIsSignIn] = useState(true);
   const [formData, setFormData] = useState({
