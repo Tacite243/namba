@@ -83,7 +83,7 @@ const AuthPopup = ({ closePopup }) => {
       username: formData.username,
       password: formData.password,
       ...(formData.email && { email: formData.email }),
-      location, // Ajouter la localisation
+      location,
     };
 
     try {

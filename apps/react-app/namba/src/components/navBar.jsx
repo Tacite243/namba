@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 import logo from "/bubbles.png";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import AuthPopup from "../client/AuthPopup"; // Importer le composant AuthPopup
+import AuthPopup from "../client/AuthPopup";
 
 export default function NavBar() {
   const { isAuthenticated, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // État pour ouvrir le popup
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
