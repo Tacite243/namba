@@ -34,4 +34,18 @@ routes.get(
   user.getOneUser
 );
 
+routes.get(
+  "/collector",
+  vars.AuthToken,
+  vars.authRoles("ADMIN"),
+  user.getCollectors
+);
+
+routes.get(
+  "/collector/:id",
+  vars.AuthToken,
+  vars.authRoles("ADMIN", "COLLECTOR"),
+  user.getOneCollector
+);
+
 export default routes;

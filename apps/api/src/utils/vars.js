@@ -153,6 +153,13 @@ async function AuthToken(req, res, next) {
   }
 }
 
+const isPasswordStrong = (password) => {
+  // Au moins 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return passwordRegex.test(password);
+};
+
 export default {
   setResponse,
   status,
@@ -161,4 +168,5 @@ export default {
   verifyPassword,
   authRoles,
   AuthToken,
+  isPasswordStrong,
 };
