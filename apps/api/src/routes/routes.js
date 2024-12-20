@@ -6,6 +6,6 @@ const routes = express.Router();
 
 routes.use("/order", orderRoutes);
 
-routes.use("user", userRoutes);
+routes.use("/user", userRoutes);
 
 export default routes;

@@ -110,7 +110,9 @@ export default function NavBar() {
             ) : (
               <li className="nav-item ms-3">
                 <button
+
                   onClick={openPopup} // Ouvrir le popup
+
                   className="nav-link custom-btn custom-border-btn custom-btn-bg-white btn"
                 >
                   Connexion
@@ -120,7 +122,7 @@ export default function NavBar() {
           </ul>
         </div>
       </div>
-
+      
       {/* Afficher le popup si isPopupOpen est true */}
       {isPopupOpen && <AuthPopup closePopup={closePopup} />}
     </nav>
