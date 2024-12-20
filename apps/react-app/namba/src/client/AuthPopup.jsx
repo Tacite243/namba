@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -11,14 +11,25 @@ const AuthPopup = ({ closePopup }) => {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [location, setLocation] = useState(null);
 
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedLocation = localStorage.getItem("userLocation");
+    if (storedLocation) {
+      setLocation(JSON.parse(storedLocation));
+      navigate("/services");
+    }
+  }, [navigate]);
 
   const handleSwitchForm = () => {
     setIsSignIn(!isSignIn);
     setFormData({ username: "", email: "", password: "" });
     setErrorMessage("");
+    setSuccessMessage("");
   };
 
   const handleInputChange = (e) => {
@@ -26,9 +37,29 @@ const AuthPopup = ({ closePopup }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\S+$).{8,}$/;
-    return passwordRegex.test(password);
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setErrorMessage(
+        "La géolocalisation n'est pas prise en charge par votre navigateur."
+      );
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLocation = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+        setLocation(userLocation);
+        localStorage.setItem("userLocation", JSON.stringify(userLocation));
+      },
+      (error) => {
+        setErrorMessage(
+          "Impossible de récupérer votre localisation. Veuillez l'activer dans les paramètres de votre navigateur."
+        );
+      }
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -39,10 +70,11 @@ const AuthPopup = ({ closePopup }) => {
       return;
     }
 
-    if (!isSignIn && !validatePassword(formData.password)) {
+    if (!location) {
       setErrorMessage(
-        "Le mot de passe doit contenir au moins 8 caractères, un chiffre, une majuscule, une minuscule, et ne pas contenir d'espaces."
+        "Veuillez activer votre localisation avant de continuer."
       );
+      getLocation();
       return;
     }
 
@@ -51,6 +83,7 @@ const AuthPopup = ({ closePopup }) => {
       username: formData.username,
       password: formData.password,
       ...(formData.email && { email: formData.email }),
+      location, // Ajouter la localisation
     };
 
     try {
@@ -63,31 +96,19 @@ const AuthPopup = ({ closePopup }) => {
         localStorage.setItem("token", response.data.data.token);
 
         login();
-        alert(isSignIn ? "Connexion réussie !" : "Inscription réussie !");
-        closePopup();
-        navigate("/services");
+        setSuccessMessage(
+          isSignIn ? "Connexion réussie !" : "Inscription réussie !"
+        );
+        setTimeout(() => {
+          closePopup();
+          navigate("/services");
+        }, 2000);
       } else {
-        console.error("Aucun token trouvé dans la réponse.");
         setErrorMessage("Une erreur est survenue. Veuillez réessayer.");
       }
     } catch (error) {
-      if (error.response) {
-        if (error.response.status === 401) {
-          setErrorMessage("Nom d'utilisateur ou mot de passe incorrect.");
-        } else if (error.response.status === 400 && !isSignIn) {
-          if (error.response.data.error === "User already exists") {
-            alert(
-              "Cet utilisateur existe déjà. Veuillez essayer de vous connecter."
-            );
-            handleSwitchForm();
-          } else {
-            setErrorMessage(error.response.data.error || "Erreur inconnue.");
-          }
-        }
-      } else {
-        console.error("Erreur réseau ou serveur :", error.message);
-        setErrorMessage("Impossible de traiter votre demande. Réessayez.");
-      }
+      console.error("Erreur lors de la soumission :", error.message);
+      setErrorMessage("Impossible de traiter votre demande. Réessayez.");
     }
   };
 
@@ -99,6 +120,9 @@ const AuthPopup = ({ closePopup }) => {
         </button>
         <h2>{isSignIn ? "Se connecter" : "S'inscrire"}</h2>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
+        )}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <input
