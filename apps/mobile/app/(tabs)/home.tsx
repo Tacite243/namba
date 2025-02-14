@@ -1,44 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { colors } from '@/constants/Colors';
 import { fonts } from '@/constants/fonts';
+
 
 const { height, width } = Dimensions.get('window');
 
 const Home = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // État pour gérer l'ouverture du menu
-  const menuAnimation = useState(new Animated.Value(-width))[0]; // Animation pour le menu
-
-  // Fonction pour ouvrir/fermer le menu
-  const toggleMenu = () => {
-    if (isMenuOpen) {
-      // Fermer le menu
-      Animated.timing(menuAnimation, {
-        toValue: -width, // Déplacer le menu hors de l'écran
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      // Ouvrir le menu
-      Animated.timing(menuAnimation, {
-        toValue: 0, // Déplacer le menu dans l'écran
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-    setIsMenuOpen(!isMenuOpen); // Inverser l'état du menu
-  };
 
   return (
     <View style={styles.container}>
-      {/* En-tête : Logo et menu burger */}
-      <View style={styles.header}>
-        <Text style={styles.logo}>NAMBA</Text>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Text style={styles.menuIcon}>≡</Text>
-        </TouchableOpacity>
-      </View>
-
       {/* Contenu principal */}
       <View style={styles.content}>
         <Text style={styles.mainText}>Rendez-vous la</Text>
@@ -49,29 +20,6 @@ const Home = () => {
           <Text style={styles.buttonText}>Voir Nos Services</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Menu */}
-      <Animated.View
-        style={[
-          styles.menu,
-          {
-            transform: [{ translateX: menuAnimation }], // Appliquer l'animation de translation
-          },
-        ]}
-      >
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Accueil</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Services</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>À propos</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuText}>Contact</Text>
-        </TouchableOpacity>
-      </Animated.View>
     </View>
   );
 };
