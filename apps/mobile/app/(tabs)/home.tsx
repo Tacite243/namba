@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import LottieView from 'lottie-react-native';
 import { colors } from '@/constants/Colors';
 import { fonts } from '@/constants/fonts';
 import { useRouter } from 'expo-router';
@@ -14,8 +16,6 @@ import Image5 from '@/assets/images/services/professional-industrial-cleaner-pro
 import Image6 from '@/assets/images/services/close-up-mop-cleaning-industrial-plant-floor.jpg';
 import Image7 from '@/assets/images/services/people-taking-care-office-cleaning.jpg';
 import Image8 from '@/assets/images/services/person-taking-care-office.jpg';
-
-
 
 const Home = () => {
   const router = useRouter();
@@ -68,55 +68,80 @@ const Home = () => {
   ];
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Bienvenue sur Namba</Text>
-        <Text style={styles.headerSubtitle}>Nous vous offrons les meilleurs services pour répondre à vos besoins.</Text>
-      </View>
+    <LinearGradient
+      colors={[colors.primary, colors.secondary]}
+      style={styles.container}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {/* En-tête */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Bienvenue sur Namba</Text>
+          <Text style={styles.headerSubtitle}>Nous vous offrons les meilleurs services pour répondre à vos besoins.</Text>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Nos Services</Text>
-        {services.map((service, index) => (
-          <ServiceCard
-            key={index}
-            {...service}
-            price={Number(service.price)}
-            onPress={() => router.push('/booking')}
-          />
-        ))}
-      </View>
-    </ScrollView>
+        {/* Section Services */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Nos Services</Text>
+          {services.map((service, index) => (
+            <ServiceCard
+              key={index}
+              {...service}
+              price={Number(service.price)}
+              onPress={() => router.push('/booking')}
+            />
+          ))}
+        </View>
+
+        {/* Animation Lottie */}
+        {/* <LottieView
+          source={require('@/assets/animations/soap-bubbles.json')}
+          autoPlay
+          loop
+          style={styles.animation}
+        /> */}
+      </ScrollView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
+  },
+  scrollContainer: {
     padding: 20,
-    backgroundColor: colors.background,
   },
   header: {
     marginBottom: 30,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 32,
     fontFamily: fonts.bold,
-    color: colors.primary,
+    color: colors.secondary,
     marginBottom: 10,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 5,
   },
   headerSubtitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: fonts.regular,
-    color: colors.text,
+    color: colors.secondary,
+    opacity: 0.8,
   },
   section: {
     marginBottom: 30,
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 26,
     fontFamily: fonts.bold,
-    color: colors.primary,
-    marginBottom: 15,
+    color: colors.secondary,
+    marginBottom: 20,
+  },
+  animation: {
+    width: '100%',
+    height: 150,
+    marginTop: 20,
   },
 });
 
