@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Switch, StyleSheet, TouchableOpacity, Animated } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { 
+  View, Text, Switch, StyleSheet, TouchableOpacity, Animated 
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import { colors } from "@/constants/Colors";
-
-
 
 const SettingsScreen = () => {
   const [language, setLanguage] = useState("fr");
@@ -13,17 +13,25 @@ const SettingsScreen = () => {
   const [textSize, setTextSize] = useState("medium");
   const [privateMode, setPrivateMode] = useState(false);
   
-  // Animation pour l'apparition des paramètres
-  const fadeAnim = new Animated.Value(0);
+  // Animation d'apparition
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const savedLanguage = await AsyncStorage.getItem("language");
-        const savedTheme = await AsyncStorage.getItem("theme");
-        const savedNotifications = await AsyncStorage.getItem("notifications");
-        const savedTextSize = await AsyncStorage.getItem("textSize");
-        const savedPrivateMode = await AsyncStorage.getItem("privateMode");
+        const [
+          savedLanguage,
+          savedTheme,
+          savedNotifications,
+          savedTextSize,
+          savedPrivateMode,
+        ] = await Promise.all([
+          AsyncStorage.getItem("language"),
+          AsyncStorage.getItem("theme"),
+          AsyncStorage.getItem("notifications"),
+          AsyncStorage.getItem("textSize"),
+          AsyncStorage.getItem("privateMode"),
+        ]);
 
         if (savedLanguage) setLanguage(savedLanguage);
         if (savedTheme) setTheme(savedTheme);
@@ -36,6 +44,7 @@ const SettingsScreen = () => {
     };
 
     loadSettings();
+
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 600,
@@ -56,8 +65,7 @@ const SettingsScreen = () => {
       <Text style={styles.header}>Paramètres</Text>
 
       {/* Langue */}
-      <View style={styles.card}>
-        <Text style={styles.label}>Langue</Text>
+      <SettingCard label="Langue">
         <Picker
           selectedValue={language}
           onValueChange={(value) => {
@@ -70,11 +78,10 @@ const SettingsScreen = () => {
           <Picker.Item label="Anglais" value="en" />
           <Picker.Item label="Swahili" value="sw" />
         </Picker>
-      </View>
+      </SettingCard>
 
       {/* Thème */}
-      <View style={styles.card}>
-        <Text style={styles.label}>Thème</Text>
+      <SettingCard label="Thème">
         <Picker
           selectedValue={theme}
           onValueChange={(value) => {
@@ -87,25 +94,20 @@ const SettingsScreen = () => {
           <Picker.Item label="Sombre" value="dark" />
           <Picker.Item label="Automatique" value="auto" />
         </Picker>
-      </View>
+      </SettingCard>
 
       {/* Notifications */}
-      <View style={styles.switchContainer}>
-        <Text style={styles.label}>Notifications</Text>
-        <Switch
-          trackColor={{ false: "#767577", true: colors.primary }}
-          thumbColor={notifications ? colors.yellow : "#f4f3f4"}
-          value={notifications}
-          onValueChange={(value) => {
-            setNotifications(value);
-            saveSetting("notifications", value);
-          }}
-        />
-      </View>
+      <SwitchSetting 
+        label="Notifications"
+        value={notifications}
+        onChange={(value: boolean) => {
+          setNotifications(value);
+          saveSetting("notifications", value);
+        }}
+      />
 
       {/* Taille du texte */}
-      <View style={styles.card}>
-        <Text style={styles.label}>Taille du texte</Text>
+      <SettingCard label="Taille du texte">
         <Picker
           selectedValue={textSize}
           onValueChange={(value) => {
@@ -118,21 +120,17 @@ const SettingsScreen = () => {
           <Picker.Item label="Moyen" value="medium" />
           <Picker.Item label="Grand" value="large" />
         </Picker>
-      </View>
+      </SettingCard>
 
       {/* Mode privé */}
-      <View style={styles.switchContainer}>
-        <Text style={styles.label}>Mode privé</Text>
-        <Switch
-          trackColor={{ false: "#767577", true: colors.primary }}
-          thumbColor={privateMode ? colors.yellow : "#f4f3f4"}
-          value={privateMode}
-          onValueChange={(value) => {
-            setPrivateMode(value);
-            saveSetting("privateMode", value);
-          }}
-        />
-      </View>
+      <SwitchSetting 
+        label="Mode privé"
+        value={privateMode}
+        onChange={(value: boolean) => {
+          setPrivateMode(value);
+          saveSetting("privateMode", value);
+        }}
+      />
 
       {/* Bouton Réinitialiser */}
       <TouchableOpacity
@@ -151,6 +149,27 @@ const SettingsScreen = () => {
     </Animated.View>
   );
 };
+
+// Composant pour les cartes de paramètres
+const SettingCard: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
+  <View style={styles.card}>
+    <Text style={styles.label}>{label}</Text>
+    {children}
+  </View>
+);
+
+// Composant pour les switchs
+const SwitchSetting: React.FC<{ label: string; value: boolean; onChange: (value: boolean) => void }> = ({ label, value, onChange }) => (
+  <View style={styles.switchContainer}>
+    <Text style={styles.label}>{label}</Text>
+    <Switch
+      trackColor={{ false: "#767577", true: colors.primary }}
+      thumbColor={value ? colors.yellow : "#f4f3f4"}
+      value={value}
+      onValueChange={onChange}
+    />
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
