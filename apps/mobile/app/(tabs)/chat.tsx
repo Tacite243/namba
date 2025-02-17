@@ -1,76 +1,131 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/Colors';
 import { fonts } from '@/constants/fonts';
-
-const conversations = [
-  { id: '1', user: 'Chor S Marie auxiliaire', message: 'Tshimbo: Yomba hajuwe bile', time: '21:10', unread: true, favorite: false },
-  { id: '2', user: 'Da Bibi', message: 'Bananiqia mwa tjma 19hrs', time: '21:10', unread: false, favorite: true },
-  { id: '3', user: '+243 974 063 626', message: 'depuis samedi', time: '21:06', unread: false, favorite: false },
-  { id: '4', user: 'HIMBI2 (L’UNION FAIT LA ...)', message: 'Freddy Mwamiten: 🏆 Sticker', time: '21:02', unread: false, favorite: true },
-  { id: '5', user: 'Légendaires', message: 'Numbers Abelo: Joyeux anniversa...', time: '20:55', unread: true, favorite: false },
-];
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Chating = () => {
-  const [selectedFilter, setSelectedFilter] = useState('Tout');
+  const [messages, setMessages] = useState([
+    { id: '1', user: 'admin', message: 'Bonjour, comment puis-je vous aider avec votre commande ?', time: '10:00', type: 'received' },
+  ]);
+  const [newMessage, setNewMessage] = useState('');
+  const [height, setHeight] = useState(new Animated.Value(40));  // Pour l'animation de la hauteur
 
-  // Filtrer les conversations en fonction du filtre sélectionné
-  const filteredConversations = conversations.filter((conv) => {
-    if (selectedFilter === 'Non lues') return conv.unread;
-    if (selectedFilter === 'Favoris') return conv.favorite;
-    return true; // Afficher tout par défaut
-  });
+  // Fonction pour charger les messages depuis AsyncStorage
+  const loadMessages = async () => {
+    try {
+      const savedMessages = await AsyncStorage.getItem('messages');
+      if (savedMessages) {
+        setMessages(JSON.parse(savedMessages));
+      }
+    } catch (error) {
+      console.error('Error loading messages', error);
+    }
+  };
+
+  // Fonction pour sauvegarder les messages dans AsyncStorage
+  const saveMessages = async (newMessages: { id: string; user: string; message: string; time: string; type: string; }[]) => {
+    try {
+      await AsyncStorage.setItem('messages', JSON.stringify(newMessages));
+    } catch (error) {
+      console.error('Error saving messages', error);
+    }
+  };
+
+  // Charger les messages lors de la première exécution
+  useEffect(() => {
+    loadMessages();
+  }, []);
+
+  // Fonction pour envoyer un message
+  const handleSendMessage = () => {
+    if (newMessage.trim()) {
+      const newMsg = {
+        id: String(messages.length + 1),
+        user: 'user',
+        message: newMessage,
+        time: new Date().toLocaleTimeString().slice(0, 5),
+        type: 'sent',
+      };
+
+      // Ajouter le message envoyé par l'utilisateur
+      const updatedMessages = [...messages, newMsg];
+      setMessages(updatedMessages);
+
+      // Sauvegarder les messages
+      saveMessages(updatedMessages);
+
+      // Réponse automatique de l'administrateur après un délai simulé
+      setTimeout(() => {
+        const adminResponse = {
+          id: String(messages.length + 2),
+          user: 'admin',
+          message: 'Nous avons bien reçu votre message. Votre commande est en cours de préparation.',
+          time: new Date().toLocaleTimeString().slice(0, 5),
+          type: 'received',
+        };
+        const updatedMessagesWithResponse = [...updatedMessages, adminResponse];
+        setMessages(updatedMessagesWithResponse);
+        saveMessages(updatedMessagesWithResponse);
+      }, 1500); // Délai de 1,5 secondes avant la réponse
+    }
+    setNewMessage('');
+  };
+
+  // Gérer la hauteur du champ de saisie du message
+  const handleTextChange = (text: string) => {
+    setNewMessage(text);
+
+    // Dynamique : ajuster la hauteur du champ en fonction du texte
+    Animated.timing(height, {
+      toValue: text.length > 50 ? 80 : 40, // Si le texte est long, augmenter la hauteur
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  // Affichage dynamique des messages (envoi ou réception)
+  const renderMessage = ({ item }: { item: { id: string; user: string; message: string; time: string; type: string; } }) => (
+    <View style={[styles.messageContainer, item.type === 'sent' ? styles.sentMessage : styles.receivedMessage]}>
+      <Text style={styles.messageText}>{item.message}</Text>
+      <Text style={styles.timeText}>{item.time}</Text>
+    </View>
+  );
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Discussions</Text>
-        <Ionicons name="menu" size={24} color="white" />
+        <Text style={styles.headerTitle}>Support Administrateur</Text>
+        <Ionicons name="menu" size={24} color={colors.secondary} />
       </View>
 
-      {/* Search & Filters */}
-      <View style={styles.searchContainer}>
-        <Ionicons name="search" size={18} color="gray" style={styles.searchIcon} />
-        <TextInput placeholder="Rechercher" placeholderTextColor="gray" style={styles.searchInput} />
-      </View>
-
-      <View style={styles.filterContainer}>
-        {['Tout', 'Non lues', 'Favoris'].map((filter) => (
-          <TouchableOpacity
-            key={filter}
-            style={[styles.filterButton, selectedFilter === filter && styles.activeFilter]}
-            onPress={() => setSelectedFilter(filter)}
-          >
-            <Text style={styles.filterText}>{filter}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* Liste des conversations */}
+      {/* Liste des messages */}
       <FlatList
-        data={filteredConversations}
+        data={messages}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.chatItem}>
-            <View style={styles.chatDetails}>
-              <Text style={styles.chatUser}>{item.user}</Text>
-              <Text style={styles.chatMessage}>{item.message}</Text>
-            </View>
-            <View style={styles.chatTimeContainer}>
-              <Text style={styles.chatTime}>{item.time}</Text>
-              {item.unread && <View style={styles.unreadDot} />}
-            </View>
-          </TouchableOpacity>
-        )}
+        renderItem={renderMessage}
+        contentContainerStyle={styles.messagesList}
       />
 
-      {/* Bouton flottant */}
-      <TouchableOpacity style={styles.floatingButton}>
-        <Ionicons name="chatbubble" size={24} color="white" />
-      </TouchableOpacity>
-    </View>
+      {/* Zone de saisie du message */}
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={[styles.input, { height: height }]} // Hauteur dynamique
+          value={newMessage}
+          onChangeText={handleTextChange}
+          placeholder="Écrire un message"
+          placeholderTextColor={colors.text}
+          returnKeyType="send"
+          onSubmitEditing={handleSendMessage}
+          multiline // Permet de saisir plusieurs lignes
+        />
+        <TouchableOpacity onPress={handleSendMessage} style={styles.sendButton}>
+          <Ionicons name="send" size={24} color={colors.secondary} />
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -91,80 +146,56 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 22,
     fontFamily: fonts.bold,
-    color: 'white',
+    color: colors.secondary,
   },
-  searchContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#222',
+  messagesList: {
+    paddingBottom: 10,
+  },
+  messageContainer: {
+    maxWidth: '80%',
+    marginBottom: 15,
     padding: 10,
-    borderRadius: 10,
-    alignItems: 'center',
+    borderRadius: 15,
   },
-  searchIcon: {
-    marginRight: 10,
+  sentMessage: {
+    backgroundColor: colors.primary,
+    alignSelf: 'flex-end',
   },
-  searchInput: {
-    flex: 1,
-    color: 'white',
+  receivedMessage: {
+    backgroundColor: colors.tertiary,
+    alignSelf: 'flex-start',
   },
-  filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 15,
-  },
-  filterButton: {
-    backgroundColor: '#333',
-    paddingVertical: 6,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-  },
-  activeFilter: {
-    backgroundColor: '#6a99d8',
-  },
-  filterText: {
-    color: 'white',
-  },
-  chatItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#444',
-  },
-  chatDetails: {
-    flex: 1,
-  },
-  chatUser: {
-    color: 'white',
-    fontSize: 16,
+  messageText: {
+    color: colors.secondary,
+    fontSize: 14,
     fontFamily: fonts.regular,
   },
-  chatMessage: {
-    color: 'gray',
-    fontSize: 14,
-  },
-  chatTimeContainer: {
-    alignItems: 'flex-end',
-  },
-  chatTime: {
-    color: 'gray',
+  timeText: {
+    color: colors.text,
     fontSize: 12,
-  },
-  unreadDot: {
-    width: 8,
-    height: 8,
-    backgroundColor: 'green',
-    borderRadius: 4,
     marginTop: 5,
+    alignSelf: 'flex-end',
   },
-  floatingButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    backgroundColor: '#6a99d8',
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderTopWidth: 0.5,
+    borderTopColor: colors.text,
+  },
+  input: {
+    flex: 1,
+    backgroundColor: colors.secondary,
+    color: colors.text,
+    padding: 10,
+    borderRadius: 20,
+    marginRight: 10,
+    textAlignVertical: 'top', // Texte aligné en haut
+  },
+  sendButton: {
+    backgroundColor: colors.primary,
     padding: 12,
     borderRadius: 30,
-    elevation: 5,
   },
 });
 
