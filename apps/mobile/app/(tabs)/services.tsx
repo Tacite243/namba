@@ -87,7 +87,15 @@ const Services = () => {
               key={index}
               {...service}
               price={Number(service.price)}
-              onPress={() => router.push('/booking')}
+              onPress={() => router.push({
+                pathname: '/booking',
+                params: {
+                  service: service.name,
+                  description: service.description,
+                  price: service.price,
+                  unit: service.unit
+                }
+              })}
             />
           ))}
         </View>
