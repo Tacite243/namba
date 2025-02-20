@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { colors } from '@/constants/Colors';
 
 
+
 export default function RootLayout() {
   return (
     <Stack

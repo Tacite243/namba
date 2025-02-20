@@ -6,6 +6,7 @@ import TeamSection from '@/components/teamSection';
 import HelpSection from '@/components/helpSection';
 import Testimonials from '@/components/testimonialSection';
 import Footer from '@/components/footer';
+import Entreprise from '@/components/entreprise';
 
 const { height, width } = Dimensions.get('window');
 
@@ -32,6 +33,7 @@ const Home = () => {
       <TeamSection />
       <Testimonials />
       <HelpSection />
+      <Entreprise />
       <Footer />
     </ScrollView>
   );

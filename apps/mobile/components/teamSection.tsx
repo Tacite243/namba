@@ -12,10 +12,10 @@ const TeamSection = () => {
         <Text style={styles.boldText}>Une équipe Heureuse et prête à vous Servir !</Text>
       </Text>
       <Text style={styles.description}>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis corporis facere impedit. Optio natus a est rem quod mollitia vitae, porro ullam incidunt, quidem magnam ab eius voluptate accusamus ea.
+        Chez Namba, c'est gardez sa fraicheur à moins cher
       </Text>
       <Text style={styles.description}>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore nobis assumenda iste rerum eligendi quo maxime.
+        Bya ku cunga weekend ju tufule biishe sasa 
       </Text>
     </View>
   );

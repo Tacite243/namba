@@ -8,25 +8,39 @@ const { width } = Dimensions.get('window');
 const testimonials = [
   {
     id: '1',
-    name: 'Marie',
-    image: require('@/assets/images/avatar/happy-customer-01.jpg'),
+    name: 'Anny',
+    image: require('@/assets/images/avatar/anny.jpeg'),
     rating: 3,
-    comment: 'Best Cleaning Service Provider ipsum dolor sit consectetur kengan',
+    comment: "C'est super facile !",
   },
   {
     id: '2',
-    name: 'Nana',
-    image: require('@/assets/images/avatar/happy-customer-02.jpg'),
+    name: 'Pablo',
+    image: require('@/assets/images/avatar/pablo.jpeg'),
     rating: 2,
-    comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.',
+    comment: "c'est vrai NAMBA ni Tokos",
   },
   {
     id: '3',
-    name: 'Elon',
-    image: require('@/assets/images/avatar/happy-customer-03.jpg'),
+    name: 'Gloire',
+    image: require('@/assets/images/avatar/gloire.jpeg'),
     rating: 5,
-    comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.',
+    comment: "super facile,kama NAMBA ilikuwaka wapi izi siku zote!",
   },
+  {
+    id: '4',
+    name: 'Evelyne',
+    image: require('@/assets/images/avatar/evelyne.jpeg'),
+    rating: 3,
+    comment: "Moi je m'abonne pour 6 mois direct",
+  },
+  {
+    id: '5',
+    name: 'Patrice',
+    image: require('@/assets/images/avatar/tripa.jpeg'),
+    rating: 4,
+    comment: "Whaou!bya class et à moins cher en plus",
+  }
 ];
 
 // Composant pour afficher chaque témoignage

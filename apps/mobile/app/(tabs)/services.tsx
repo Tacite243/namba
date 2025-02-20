@@ -21,21 +21,21 @@ const Services = () => {
   const router = useRouter();
   const services = [
     {
-      name: 'Lavage des linges',
+      name: 'Lavage des vêtements et linges',
       description: 'Nous nettoyons vos vêtements jusqu\'à ce qu\'ils deviennent comme neufs !',
       image: Image1, // Utilisez l'image importée
       hover: Image2,
       like: 5,
-      price: 2,
+      price: 4000,
       unit: 'le kilo',
     },
     {
-      name: 'Nettoyage des draps, nattes...',
-      description: 'Nous nettoyons vos draps et nattes jusqu\'à ce qu\'ils deviennent comme neufs !',
+      name: 'Nettoyage à sec',
+      description: 'Pour vos pièces les plus précieuses',
       image: Image3,
       hover: Image4,
       like: 4,
-      price: 5,
+      price: 6000,
       unit: 'le kilo',
     },
     {
@@ -44,7 +44,7 @@ const Services = () => {
       image: Image5,
       hover: Image6,
       like: 4,
-      price: 5,
+      price: 3000,
       unit: 'le kilo',
     },
     {
@@ -57,12 +57,12 @@ const Services = () => {
       unit: 'personnalisé',
     },
     {
-      name: 'Nettoyage des Tapis',
+      name: 'Nettoyage des Tapis et meubles',
       description: 'Nous nettoyons vos tapis jusqu\'à ce qu\'ils deviennent comme neufs !',
       image: Image7,
       hover: Image8,
       like: 4,
-      price: 5,
+      price: 3,
       unit: 'le mètre carré',
     },
   ];
@@ -75,7 +75,7 @@ const Services = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* En-tête */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Bienvenue sur Namba</Text>
+          <Text style={styles.headerTitle}>Chez NAMBA</Text>
           <Text style={styles.headerSubtitle}>Nous vous offrons les meilleurs services pour répondre à vos besoins.</Text>
         </View>
 

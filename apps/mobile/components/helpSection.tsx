@@ -16,11 +16,11 @@ const HelpSection = () => {
 
       {/* Boîte bleue contenant le texte et l'icône */}
       <View style={styles.infoBox}>
-        <Text style={styles.boldText}>Besoin d’aide ?</Text>
-        <Text style={styles.regularText}>Appel nous directement:</Text>
+        <Text style={styles.boldText}>Besoin de nos services ?</Text>
+        <Text style={styles.regularText}>Contactez-nous directement: </Text>
         <View style={styles.phoneRow}>
           <Ionicons name="call" size={20} color="white" />
-          <Text style={styles.phoneNumber}>+243 971 736 244</Text>
+          <Text style={styles.phoneNumber}>+243 985 971 761</Text>
         </View>
       </View>
     </View>
