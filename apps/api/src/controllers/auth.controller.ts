@@ -1,22 +1,23 @@
 import { Request, Response } from "express";
 import { registerUser, loginUser } from "../services/auth.service";
+import { Role } from "@prisma/client"; // Importez l'énumération Role depuis Prisma
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const user = await registerUser(req.body.name, req.body.email, req.body.password, req.body.role);
+    const { name, email, password, role = "CLIENT" } = req.body;
+    const user = await registerUser(name, email, password, role as Role);
     res.status(201).json(user);
   } catch (err) {
-    const errorMessage = (err as Error).message;
-    res.status(400).json({ message: errorMessage });
+    res.status(400).json({ message: (err as Error).message });
   }
 };
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const data = await loginUser(req.body.email, req.body.password);
+    const { email, password } = req.body;
+    const data = await loginUser(email, password);
     res.json(data);
   } catch (err) {
-    const errorMessage = (err as Error).message;
-    res.status(401).json({ message: errorMessage });
+    res.status(401).json({ message: (err as Error).message });
   }
 };
