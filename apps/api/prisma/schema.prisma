@@ -22,10 +22,10 @@ enum Role {
 
 model User {
   id          String   @id @default(uuid())
-  name        String
-  email       String   @unique
+  name        String?
+  email       String?  @unique
   password    String
   role        Role     @default(CLIENT)
-  phoneNumber String
+  phoneNumber String   @unique
   createdAt   DateTime @default(now())
 }

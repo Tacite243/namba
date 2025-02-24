@@ -11,10 +11,15 @@ export const register = handleAsync(async (req: Request, res: Response, next: Ne
   res.status(201).json(user);
 });
 
-export const login = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { email, password } = req.body;
-  const data = await loginUser(email, password);
-  res.json(data);
+export const login = handleAsync(async (req: Request, res: Response) => {
+  const { phoneNumber, password } = req.body;
+
+  if (!phoneNumber || !password) {
+    res.status(400).json({ message: "Numéro de téléphone et mot de passe requis" });
+  }
+
+  const { user, token } = await loginUser(phoneNumber, password);
+  res.json({ user, token });
 });
 
 /**
@@ -55,10 +60,10 @@ export const deleteUserById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-      await deleteUser (id);
-      res.json({ message: "Utilisateur supprimé avec succès" });
+    await deleteUser(id);
+    res.json({ message: "Utilisateur supprimé avec succès" });
   } catch (error) {
-      res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "Erreur serveur" });
   }
 };
 
@@ -69,9 +74,9 @@ export const searchUsersByRole = async (req: Request, res: Response) => {
   const { role, phoneNumber } = req.query;
 
   try {
-      const users = await searchUsers(role as string, phoneNumber as string);
-      res.json(users);
+    const users = await searchUsers(role as string, phoneNumber as string);
+    res.json(users);
   } catch (error) {
-      res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "Erreur serveur" });
   }
 };

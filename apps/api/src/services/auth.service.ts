@@ -32,20 +32,26 @@ export const registerUser = async (name: string, email: string, password: string
   const hashedPass = await hashedPassword(password, SALT_ROUNDS);
 
   return prisma.user.create({
-    data: { name, email, password: hashedPass, role, phoneNumber:  phoneNumber},
+    data: { name, email, password: hashedPass, role, phoneNumber: phoneNumber },
   });
 };
 
 /**
  * Connexion utilisateur.
  */
-export const loginUser = async (email: string, password: string) => {
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) throw new Error("Utilisateur non trouvé.");
+export const loginUser = async (phoneNumber: string, password: string) => {
+  const user = await prisma.user.findUnique({
+    where: { phoneNumber }
+  });
+  if (!user) {
+    throw new Error("Numéro de téléphone ou mot de passe incorrect");
+  }
 
+  // Vérifier le mot de passe
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) throw new Error("Mot de passe incorrect.");
 
+  // Générer un token JWT
   const token = jwt.sign(
     { userId: user.id, role: user.role },
     config.jwtSecret as string,
@@ -96,16 +102,16 @@ export const hashPassword = async (password: string) => {
  */
 export const searchUsers = async (role?: string, phoneNumber?: string) => {
   const filters: any = {};
-  
+
   if (role) {
-      filters.role = role;
+    filters.role = role;
   }
-  
+
   if (phoneNumber) {
-      filters.phoneNumber = phoneNumber;
+    filters.phoneNumber = phoneNumber;
   }
-  
+
   return prisma.user.findMany({
-      where: filters,
+    where: filters,
   });
 };

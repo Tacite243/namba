@@ -31,10 +31,11 @@ const initSuperAdmin = async () => {
   if (!admin) {
     await prisma.user.create({
       data: {
-        name: "Super Admin",
+        name: "Super_Admin",
         email: "admin@admin.com",
-        password: await bcrypt.hash("superadmin123", 10),
+        password: await bcrypt.hash("superadmin123", 12),
         role: "SUPER_ADMIN",
+        phoneNumber: "+243971736244"
       },
     });
     console.log("Super Admin créé !");

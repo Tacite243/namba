@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, getAllUsers, getUserById, updateUserById, deleteUserById, searchUsersByRole } from "../controllers/auth.controller";
+import { register, getAllUsers, getUserById, updateUserById, deleteUserById, searchUsersByRole, login } from "../controllers/auth.controller";
 import { authenticateUser, verifyRole } from "../middlewares/auth.middleware";
 import { Role } from "@prisma/client";
 
