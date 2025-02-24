@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { Role } from "@prisma/client";
+import express from "express";
 
 dotenv.config();
 
@@ -10,7 +11,7 @@ interface AuthRequest extends Request {
 }
 
 /**
- * Middleware pour vérifier si l'utilisateur est authentifié.
+ * Vérifie l'authentification de l'utilisateur via JWT.
  */
 export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -21,8 +22,15 @@ export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunc
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string; role: string };
-    req.user = { userId: decoded.userId, role: decoded.role as Role };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string; role: Role };
+
+    // Vérification stricte du rôle
+    if (!Object.values(Role).includes(decoded.role)) {
+      res.status(400).json({ message: "Rôle invalide." });
+      return;
+    }
+
+    req.user = { userId: decoded.userId, role: decoded.role };
     return next();
   } catch (err) {
     res.status(403).json({ message: "Token invalide." });
@@ -31,13 +39,25 @@ export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunc
 };
 
 /**
- * Middleware pour vérifier si l'utilisateur est SUPER_ADMIN.
+ * Vérifie si l'utilisateur est SUPER_ADMIN.
  */
 
 export const isSuperAdmin = (req: AuthRequest, res: Response, next: NextFunction): void => {
-  if (!req.user || req.user.role !== "SUPER_ADMIN") {
+  if (!req.user || req.user.role !== Role.SUPER_ADMIN) {
     res.status(403).json({ message: "Accès interdit. Seul un Super Admin peut effectuer cette action." });
     return;
   }
   return next();
+};
+
+/**
+ * Middleware dynamique pour vérifier si l'utilisateur a un rôle spécifique.
+ */
+
+export const verifyRole = (requiredRole: Role) => (req: AuthRequest, res: express.Response, next: express.NextFunction) => {
+  if (!req.user || req.user.role !== requiredRole) {
+    res.status(403).json({ message: `Accès interdit. Seuls les ${requiredRole} peuvent effectuer cette action.` });
+    return;
+  }
+  next();
 };
