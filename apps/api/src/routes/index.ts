@@ -7,7 +7,7 @@ import { Role } from "@prisma/client";
 const router = express.Router();
 
 router.post(
-  "/createAdmin",
+  "/auth/createAdmin",
   authenticateUser,
   verifyRole(Role.SUPER_ADMIN),
   register
