@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 import morgan from 'morgan';
 import path from 'path';
 import fs from 'fs';
-// import { errorHandler } from "./middlewares/errorHandler";
+import { errorHandler } from "./middlewares/errorHandler";
 
 dotenv.config();
 
@@ -16,7 +16,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-
+app.use(errorHandler)
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
@@ -26,7 +26,6 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   app.use(morgan('combined', { stream: accessLogStream })); // Format complet pour la production
 }
-// app.use(errorHandler)
 
 app.use("/api/auth", authRoutes);
 
