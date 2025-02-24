@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import { registerUser, loginUser, findUserById, updateUser, deleteUser } from "../services/auth.service";
+import { registerUser, loginUser, findUserById, updateUser, deleteUser, searchUsers } from "../services/auth.service";
 import { Role } from "@prisma/client"; // Importez l'énumération Role depuis Prisma
 import { handleAsync } from "../middlewares/errorHandler";
 import prisma from "../config/db";
 
+
 export const register = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { name, email, password, role = "CLIENT" } = req.body;
-  const user = await registerUser(name, email, password, role as Role);
+  const { name, email, password, role = "CLIENT", phoneNumber } = req.body;
+  const user = await registerUser(name, email, password, role as Role, phoneNumber);
   res.status(201).json(user);
 });
 
@@ -56,6 +57,20 @@ export const deleteUserById = async (req: Request, res: Response) => {
   try {
       await deleteUser (id);
       res.json({ message: "Utilisateur supprimé avec succès" });
+  } catch (error) {
+      res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+/**
+ * Rechercher des utilisateurs par rôle et/ou numéro de téléphone
+ */
+export const searchUsersByRole = async (req: Request, res: Response) => {
+  const { role, phoneNumber } = req.query;
+
+  try {
+      const users = await searchUsers(role as string, phoneNumber as string);
+      res.json(users);
   } catch (error) {
       res.status(500).json({ message: "Erreur serveur" });
   }

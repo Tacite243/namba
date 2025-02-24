@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, getAllUsers, getUserById, updateUserById, deleteUserById } from "../controllers/auth.controller";
+import { register, login, getAllUsers, getUserById, updateUserById, deleteUserById, searchUsersByRole } from "../controllers/auth.controller";
 import { authenticateUser, verifyRole } from "../middlewares/auth.middleware";
 import { Role } from "@prisma/client";
 
@@ -19,6 +19,7 @@ router.post("/login", login);
 router.get("/", authenticateUser, verifyRole("ADMIN"), getAllUsers);
 router.get("/:id", authenticateUser, getUserById);
 router.put("/:id", authenticateUser, updateUserById);
-router.delete("/:id", authenticateUser, verifyRole("SUPER_ADMIN"), deleteUserById)
+router.delete("/:id", authenticateUser, verifyRole("SUPER_ADMIN"), deleteUserById);
+router.get("/searchUser", authenticateUser, verifyRole("ADMIN"), searchUsersByRole);
 
 export default router;

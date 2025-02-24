@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import prisma from "../config/db";
 import { Role } from "@prisma/client";
 import { config } from "../config/config";
-import { handleAsync } from "../middlewares/errorHandler";
 
 dotenv.config();
 const SALT_ROUNDS = 12;
@@ -24,7 +23,7 @@ const isValidRole = (role: string): role is Role => Object.values(Role).includes
 /**
  * Inscription utilisateur.
  */
-export const registerUser = async (name: string, email: string, password: string, role: Role = Role.CLIENT) => {
+export const registerUser = async (name: string, email: string, password: string, role: Role = Role.CLIENT, phoneNumber: string) => {
   if (!isValidRole(role)) {
     throw new Error("Rôle invalide.");
   }
@@ -33,7 +32,7 @@ export const registerUser = async (name: string, email: string, password: string
   const hashedPass = await hashedPassword(password, SALT_ROUNDS);
 
   return prisma.user.create({
-    data: { name, email, password: hashedPass, role },
+    data: { name, email, password: hashedPass, role, phoneNumber:  phoneNumber},
   });
 };
 
@@ -90,4 +89,23 @@ export const deleteUser = async (id: string) => {
 export const hashPassword = async (password: string) => {
   const saltRounds = 10;
   return bcrypt.hash(password, saltRounds);
+};
+
+/**
+ * Rechercher des utilisateurs par rôle et/ou numéro de téléphone
+ */
+export const searchUsers = async (role?: string, phoneNumber?: string) => {
+  const filters: any = {};
+  
+  if (role) {
+      filters.role = role;
+  }
+  
+  if (phoneNumber) {
+      filters.phoneNumber = phoneNumber;
+  }
+  
+  return prisma.user.findMany({
+      where: filters,
+  });
 };
