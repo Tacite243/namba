@@ -1,16 +1,62 @@
-import { Request, Response } from "express";
-import { registerUser, loginUser } from "../services/auth.service";
+import { Request, Response, NextFunction } from "express";
+import { registerUser, loginUser, findUserById, updateUser, deleteUser } from "../services/auth.service";
 import { Role } from "@prisma/client"; // Importez l'énumération Role depuis Prisma
 import { handleAsync } from "../middlewares/errorHandler";
+import prisma from "../config/db";
 
-export const register = handleAsync(async (req: Request, res: Response) => {
+export const register = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, role = "CLIENT" } = req.body;
   const user = await registerUser(name, email, password, role as Role);
   res.status(201).json(user);
 });
 
-export const login = handleAsync(async (req: Request, res: Response) => {
+export const login = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
   const data = await loginUser(email, password);
   res.json(data);
 });
+
+/**
+ * Récupérer tous les utilisateurs
+ */
+export const getAllUsers = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const users = await prisma.user.findMany();
+  res.json(users);
+});
+
+/**
+ * Récupérer un utilisateur par ID
+ */
+export const getUserById = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  const user = await findUserById(id);
+  if (!user) {
+    res.status(404).json({ message: "Utilisateur non trouvé" });
+  } else {
+    res.json(user);
+  }
+});
+
+/**
+ * Mettre à jour un utilisateur
+ */
+export const updateUserById = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  const { name, email, role } = req.body;
+  const user = await updateUser(id, { name, email, role });
+  res.json(user);
+});
+
+/**
+ * Supprimer un utilisateur
+ */
+export const deleteUserById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+      await deleteUser (id);
+      res.json({ message: "Utilisateur supprimé avec succès" });
+  } catch (error) {
+      res.status(500).json({ message: "Erreur serveur" });
+  }
+};

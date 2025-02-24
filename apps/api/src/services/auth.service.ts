@@ -4,9 +4,17 @@ import dotenv from "dotenv";
 import prisma from "../config/db";
 import { Role } from "@prisma/client";
 import { config } from "../config/config";
+import { handleAsync } from "../middlewares/errorHandler";
 
 dotenv.config();
 const SALT_ROUNDS = 12;
+
+/**
+ * Hash du mot de passe
+ */
+const hashedPassword = async (password: string, SALT_ROUNDS: number) => {
+  return bcrypt.hash(password, SALT_ROUNDS);
+}
 
 /**
  * Vérifie si un rôle est valide.
@@ -21,9 +29,11 @@ export const registerUser = async (name: string, email: string, password: string
     throw new Error("Rôle invalide.");
   }
 
-  const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+  // Hash du mot de passe avant de l'assigner
+  const hashedPass = await hashedPassword(password, SALT_ROUNDS);
+
   return prisma.user.create({
-    data: { name, email, password: hashedPassword, role },
+    data: { name, email, password: hashedPass, role },
   });
 };
 
@@ -44,4 +54,40 @@ export const loginUser = async (email: string, password: string) => {
   );
 
   return { token, user };
+};
+
+/**
+ * Trouver un utilisateur par email
+ */
+export const findUserByEmail = async (email: string) => {
+  return prisma.user.findUnique({ where: { email } });
+}
+
+/**
+ * Trouver un utilisateur par ID
+ */
+export const findUserById = async (id: string) => {
+  return prisma.user.findUnique({ where: { id } });
+};
+
+/**
+* Mettre à jour un utilisateur
+*/
+export const updateUser = async (id: string, data: any) => {
+  return prisma.user.update({ where: { id }, data });
+};
+
+/**
+* Supprimer un utilisateur
+*/
+export const deleteUser = async (id: string) => {
+  return prisma.user.delete({ where: { id } });
+};
+
+/**
+* Hash du mot de passe
+*/
+export const hashPassword = async (password: string) => {
+  const saltRounds = 10;
+  return bcrypt.hash(password, saltRounds);
 };

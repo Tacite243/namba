@@ -1,18 +1,8 @@
-import express from "express";
-import { register, login } from "../controllers/auth.controller";
-import { authenticateUser, verifyRole } from "../middlewares/auth.middleware";
-import { Role } from "@prisma/client";
-
+import userRoutes from './user.routes';
+import express from 'express';
 
 const router = express.Router();
 
-router.post(
-  "/auth/createAdmin",
-  authenticateUser,
-  verifyRole(Role.SUPER_ADMIN),
-  register
-);
-router.post("/auth/register", register)
-router.post("/auth/login", login);
+router.use("/auth", userRoutes);
 
 export default router;
