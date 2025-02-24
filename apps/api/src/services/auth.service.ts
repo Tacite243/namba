@@ -3,8 +3,10 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import prisma from "../config/db";
 import { Role } from "@prisma/client";
+import { config } from "../config/config";
 
 dotenv.config();
+const SALT_ROUNDS = 12;
 
 /**
  * Vérifie si un rôle est valide.
@@ -19,7 +21,7 @@ export const registerUser = async (name: string, email: string, password: string
     throw new Error("Rôle invalide.");
   }
 
-  const hashedPassword = await bcrypt.hash(password, 12);
+  const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
   return prisma.user.create({
     data: { name, email, password: hashedPassword, role },
   });
@@ -37,7 +39,7 @@ export const loginUser = async (email: string, password: string) => {
 
   const token = jwt.sign(
     { userId: user.id, role: user.role },
-    process.env.JWT_SECRET as string,
+    config.jwtSecret as string,
     { expiresIn: "7d" }
   );
 

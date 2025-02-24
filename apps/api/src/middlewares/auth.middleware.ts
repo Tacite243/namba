@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { Role } from "@prisma/client";
 import express from "express";
+import { config } from "../config/config";
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunc
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string; role: Role };
+    const decoded = jwt.verify(token, config.jwtSecret as string) as { userId: string; role: Role };
 
     // Vérification stricte du rôle
     if (!Object.values(Role).includes(decoded.role)) {
@@ -38,17 +39,6 @@ export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunc
   }
 };
 
-/**
- * Vérifie si l'utilisateur est SUPER_ADMIN.
- */
-
-export const isSuperAdmin = (req: AuthRequest, res: Response, next: NextFunction): void => {
-  if (!req.user || req.user.role !== Role.SUPER_ADMIN) {
-    res.status(403).json({ message: "Accès interdit. Seul un Super Admin peut effectuer cette action." });
-    return;
-  }
-  return next();
-};
 
 /**
  * Middleware dynamique pour vérifier si l'utilisateur a un rôle spécifique.
