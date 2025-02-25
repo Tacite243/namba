@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { Role } from "@prisma/client";
@@ -7,8 +7,12 @@ import { config } from "../config/config";
 
 dotenv.config();
 
-interface AuthRequest extends Request {
-  user?: { userId: string; role: Role };
+export interface AuthRequest extends Request {
+  user?:
+  {
+    userId: string;
+    role: Role;
+  };
 }
 
 /**
@@ -50,4 +54,19 @@ export const verifyRole = (requiredRole: Role) => (req: AuthRequest, res: expres
     return;
   }
   next();
+};
+
+export const isAdminOrCollector: RequestHandler = (req: AuthRequest, res, next) => {
+  if (!req.user) {
+    res.status(401).json({ message: "Utilisateur non authentifié" });
+    return; // ✅ Ajout d'un return explicite
+  }
+
+  if (req.user.role !== Role.ADMIN && req.user.role !== Role.COLLECTOR) {
+    res.status(403).json({ message: "Accès refusé" });
+    return; // ✅ Ajout d'un return explicite
+  }
+
+  next();
+  return; // ✅ Ajout pour garantir un retour `void`
 };

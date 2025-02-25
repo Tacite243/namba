@@ -28,4 +28,43 @@ model User {
   role        Role     @default(CLIENT)
   phoneNumber String   @unique
   createdAt   DateTime @default(now())
+   // Relation avec les réservations en tant que client
+  clientReservations Reservation[] @relation(name: "ClientReservations")
+
+  // Relation avec les réservations en tant que collecteur
+  collectorReservations Reservation[] @relation(name: "CollectorReservations")
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  createdAt   DateTime @default(now())
+  reservations Reservation[]
+}
+
+model Reservation {
+  id          String            @id @default(uuid())
+
+  client      User              @relation(name: "ClientReservations", fields: [clientId], references: [id])
+  clientId    String
+
+  service     Service           @relation(fields: [serviceId], references: [id])
+  serviceId   String
+
+  status      ReservationStatus @default(PENDING)
+
+  assignedTo  User?             @relation(name: "CollectorReservations", fields: [collectorId], references: [id])
+  collectorId String?
+
+  createdAt   DateTime          @default(now())
+}
+
+
+enum ReservationStatus {
+  PENDING   // En attente de traitement
+  CONFIRMED // Acceptée par un collecteur/admin
+  COMPLETED // Réalisation confirmée
+  CANCELED  // Annulée
 }
