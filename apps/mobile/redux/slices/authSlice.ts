@@ -1,76 +1,69 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const backendUrl = process.env.BACKEND_URL;
 
-// Async thunk pour la connexion
-export const loginUser = createAsyncThunk(
-  'auth/login',
-  async ({ email, password }: { email: string; password: string }, { rejectWithValue }: { rejectWithValue: (value: any) => any }) => {
-    try {
-      const response = await axios.post(`${backendUrl}/login`, { email, password });
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+interface User {
+    id: number;
+    email: string;
+    role: string;
+}
 
-// Async thunk pour l'inscription
-export const registerUser = createAsyncThunk(
-  'auth/register',
-  async ({ username, email, password }: { username: string; email: string; password: string }, { rejectWithValue }: { rejectWithValue: (value: any) => any }) => {
-    try {
-      const response = await axios.post(`${backendUrl}/register`, { username, email, password });
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
+interface AuthState {
+    user: User | null;
+    token: string | null;
+    loading: boolean;
+    error: string | null;
+}
+
+const initialState: AuthState = {
+    user: null,
+    token: null,
+    loading: false,
+    error: null,
+};
+
+export const loginUser = createAsyncThunk(
+    'auth/login',
+    async ({ email, password }: { email: string; password: string }, { rejectWithValue }: { rejectWithValue: (value: any) => any }) => {
+        try {
+            const response = await axios.post<{ token: string; user: User }>(`${backendUrl}/login`, { email, password });
+            if (response.data.user.role !== 'client') {
+                return rejectWithValue({ message: 'Accès réservé aux clients.' });
+            }
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response.data);
+        }
     }
-  }
 );
 
 const authSlice = createSlice({
-  name: 'auth',
-  initialState: {
-    user: null,
-    loading: false,
-    error: null,
-  },
-  reducers: {
-    logout: (state: { user: any; loading: boolean; error: any }) => {
-      state.user = null;
-      state.error = null;
+    name: 'auth',
+    initialState,
+    reducers: {
+        logout: (state: AuthState) => {
+            state.user = null;
+            state.token = null;
+            state.error = null;
+        },
     },
-  },
-  extraReducers: (builder: any) => {
-    builder
-      // Connexion
-      .addCase(loginUser.pending, (state: { loading: boolean; error: any }) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(loginUser.fulfilled, (state: { user: any; loading: boolean; error: any }, action: { payload: any }) => {
-        state.loading = false;
-        state.user = action.payload;
-      })
-      .addCase(loginUser.rejected, (state: { loading: boolean; error: any }, action: { payload: any }) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      // Inscription
-      .addCase(registerUser.pending, (state: { loading: boolean; error: any }) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(registerUser.fulfilled, (state: { user: any; loading: boolean; error: any }, action: { payload: any }) => {
-        state.loading = false;
-        state.user = action.payload;
-      })
-      .addCase(registerUser.rejected, (state: { loading: boolean; error: any }, action: { payload: any }) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-  },
+    extraReducers: (builder: any) => {
+        builder
+            .addCase(loginUser.pending, (state: AuthState) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(loginUser.fulfilled, (state: AuthState, action: PayloadAction<{ token: string; user: User }>) => {
+                state.loading = false;
+                state.user = action.payload.user;
+                state.token = action.payload.token;
+            })
+            .addCase(loginUser.rejected, (state: AuthState, action: PayloadAction<{ message: string; user: User }>) => {
+                state.loading = false;
+                state.error = action.payload.message;
+            });
+    },
 });
 
 export const { logout } = authSlice.actions;
