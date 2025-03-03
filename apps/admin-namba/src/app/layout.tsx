@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <ReduxProvider>
           <SpinnerClient />
-          <main>{children}</main>
+          <>{children}</>
         </ReduxProvider>
       </body>
     </html>

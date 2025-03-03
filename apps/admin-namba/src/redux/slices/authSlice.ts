@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { API_URL } from "../constantes";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface User {
     id: string;
