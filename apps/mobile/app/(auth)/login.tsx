@@ -14,7 +14,6 @@ import { Ionicons } from "@expo/vector-icons";
 import CustomButton from "../../components/CustomButton";
 import { useRouter } from "expo-router";
 import { colors } from "@/constants/Colors";
-import { useSelector } from "react-redux";
 
 const Login = () => {
   const router = useRouter();

@@ -2,12 +2,14 @@ import { Text, TouchableOpacity, View, StyleSheet, Dimensions, Animated } from "
 import { colors } from "@/constants/Colors";
 import { fonts } from "@/constants/fonts";
 import { useState } from "react";
+import { useRouter } from "expo-router";
 
 const { height, width } = Dimensions.get('window');
 
 export default function NavMenu() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuAnimation = useState(new Animated.Value(-width))[0];
+    const router = useRouter();
 
     const toggleMenu = () => {
         Animated.timing(menuAnimation, {
@@ -18,8 +20,12 @@ export default function NavMenu() {
         setIsMenuOpen(!isMenuOpen);
     };
 
+    const navigateTo = (screen: string) => {
+        router.replace("/(tabs)/home")
+    }
+
     return (
-        <>
+        <view>
             <View style={styles.header}>
                 <Text style={styles.logo}>NAMBA</Text>
                 <TouchableOpacity onPress={toggleMenu}>
@@ -39,10 +45,10 @@ export default function NavMenu() {
                     { transform: [{ translateX: menuAnimation }] },
                 ]}
             >
-                <TouchableOpacity style={styles.menuItem}>
+                <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo("/(auth)/home")}>
                     <Text style={styles.menuText}>Accueil</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.menuItem}>
+                <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo("/(auth)/services")}>
                     <Text style={styles.menuText}>Services</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.menuItem}>
@@ -51,8 +57,11 @@ export default function NavMenu() {
                 <TouchableOpacity style={styles.menuItem}>
                     <Text style={styles.menuText}>Contact</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo("/(auth)/services")}>
+                    <Text style={styles.menuText}>Déconnexion</Text>
+                </TouchableOpacity>
             </Animated.View>
-        </>
+        </view>
     )
 }
 
