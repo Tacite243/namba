@@ -2,29 +2,36 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_URL } from "../constantes";
 
-
 interface User {
     id: string;
     name: string;
     email: string;
     phoneNumber: string;
     role: string;
-};
+}
+
+interface AuthState {
+    user: User | null;
+    loading: boolean;
+    error: string | null;
+    isAuthenticated: boolean;
+}
 
 // 🎯 Vérifier si l'utilisateur est encore authentifié
-export const isAuthenticated = () => {
-    if (typeof window === "undefined") return false; // vérifie qu'on est dans le navigateur
+const checkAuthStatus = () => {
+    if (typeof window === "undefined") return false;
+
     const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
     const storedDate = localStorage.getItem("loginDate");
 
-    if (!storedToken || !storedDate) return false;
+    if (!storedToken || !storedUser || !storedDate) return false;
 
     const loginDate = new Date(storedDate);
     const now = new Date();
-    const diff = now.getTime() - loginDate.getTime();
-    const threeMonths = 90 * 24 * 60 * 60 * 1000; // 3 mois en millisecondes
+    const threeMonths = 90 * 24 * 60 * 60 * 1000; // 3 mois
 
-    return diff < threeMonths; // Vrai si la session est encore valide
+    return now.getTime() - loginDate.getTime() < threeMonths;
 };
 
 // 🎯 Thunk pour la connexion
@@ -34,9 +41,11 @@ export const loginUser = createAsyncThunk(
         try {
             const response = await axios.post(`${API_URL}/auth/login`, { phoneNumber, password });
             localStorage.setItem("token", response.data.token);
+            localStorage.setItem("user", JSON.stringify(response.data.user));
             localStorage.setItem("loginDate", new Date().toISOString());
             return response.data;
         } catch (error: any) {
+            console.log(error)
             return rejectWithValue(error.response?.data?.message || "Erreur lors de la connexion");
         }
     }
@@ -54,17 +63,20 @@ export const registerUser = createAsyncThunk(
     }
 );
 
+const initialState: AuthState = {
+    user: typeof window !== "undefined" ? JSON.parse(localStorage.getItem("user") || "null") : null,
+    loading: false,
+    error: null,
+    isAuthenticated: checkAuthStatus(),
+};
+
 const authSlice = createSlice({
     name: "auth",
-    initialState: {
-        user: null as User | null,
-        loading: false,
-        error: null as string | null,
-        isAuthenticated: false, // Vérifie si l'utilisateur est déjà connecté
-    },
+    initialState,
     reducers: {
         logout: (state) => {
             localStorage.removeItem("token");
+            localStorage.removeItem("user");
             localStorage.removeItem("loginDate");
             state.user = null;
             state.isAuthenticated = false;
@@ -81,13 +93,7 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = {
-                    id: action.payload.user.id,
-                    name: action.payload.user.name,
-                    email: action.payload.user.email,
-                    phoneNumber: action.payload.user.phoneNumber,
-                    role: action.payload.user.role, // Ajout du rôle
-                };
+                state.user = action.payload.user;
                 state.isAuthenticated = true;
             })
             .addCase(loginUser.rejected, (state, action) => {

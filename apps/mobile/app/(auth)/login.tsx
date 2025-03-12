@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,42 +8,67 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ImageBackground,
+  KeyboardTypeOptions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import CustomButton from "../../components/CustomButton";
 import { useRouter } from "expo-router";
 import { colors } from "@/constants/Colors";
+import { loginUser, registerUser } from "@/redux/slices/authSlice";
+import { useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/redux/store";
+import { useDispatch } from "react-redux";
 
-const Login = () => {
+
+interface FormData {
+  name?: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  confirmPassword?: string;
+}
+
+interface Errors {
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+  password?: string;
+  confirmPassword?: string;
+}
+
+const Login: React.FC = () => {
   const router = useRouter();
-  // const {loading, error} = useSelector((state) => state.auth)
-
-  // Définition de l'état
-  const [formData, setFormData] = useState({
-    username: "",
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
     email: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
   });
-  const [errors, setErrors] = useState<{ username?: string; email?: string; password?: string; confirmPassword?: string }>({});
+
+  const [errors, setErrors] = useState<Errors>({});
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
 
-  // Animation de transition entre Login et Signup
+  // Animation pour la transition entre Login et Signup
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
   // Fonction pour gérer les changements de champs
-  const handleChange = useCallback((field: string, value: string) => {
+  const handleChange = useCallback((field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }, []);
 
   // Fonction pour valider le formulaire
-  const validateForm = useCallback(() => {
-    let newErrors: { username?: string; email?: string; password?: string; confirmPassword?: string } = {};
-    if (isSignUp && !formData.username.trim()) newErrors.username = "Nom d'utilisateur requis";
-    if (!formData.email.includes("@")) newErrors.email = "Email invalide";
+  const validateForm = useCallback((): boolean => {
+    let newErrors: Errors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (isSignUp && !formData.name?.trim()) newErrors.name = "Nom d'utilisateur requis";
+    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Numéro de téléphone requis";
+    if (isSignUp && !emailRegex.test(formData.email)) newErrors.email = "Email invalide";
     if (formData.password.length < 6) newErrors.password = "Mot de passe trop court (min 6 caractères)";
     if (isSignUp && formData.password !== formData.confirmPassword)
       newErrors.confirmPassword = "Les mots de passe ne correspondent pas";
@@ -52,57 +77,80 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   }, [formData, isSignUp]);
 
-  // Fonction pour gérer l'authentification
-  const handleSubmit = useCallback(() => {
-    if (!validateForm()) return;
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+  useEffect(() => {
+    if (isAuthenticated) {
       router.replace("/(tabs)/home");
-    }, 2000);
-  }, [validateForm, router]);
+    }
+  }, [isAuthenticated, router]);
+
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+    try {
+      if (isSignUp) {
+        await dispatch(registerUser(formData)).unwrap();
+      } else {
+        await dispatch(loginUser({ phoneNumber: formData.phoneNumber, password: formData.password })).unwrap();
+      }
+    } catch (error) {
+      console.error("Erreur d'authentification :", error);
+    }
+  };
 
   // Fonction pour alterner entre Login et Signup
   const toggleForm = () => {
     Animated.timing(fadeAnim, { toValue: 0, duration: 200, useNativeDriver: true }).start(() => {
-      setIsSignUp((prev) => !prev);
+      setIsSignUp((prev) => {
+        setFormData({
+          name: "",
+          email: "",
+          phoneNumber: "",
+          password: "",
+          confirmPassword: "",
+        });
+        return !prev;
+      });
       setErrors({});
       Animated.timing(fadeAnim, { toValue: 1, duration: 200, useNativeDriver: true }).start();
     });
   };
 
   return (
-    <ImageBackground
-      source={require('@/assets/images/bubbles.png')}
-      style={styles.backgroundImage}
-      resizeMode="cover"
-    >
+    <ImageBackground source={require('@/assets/images/bubbles.png')} style={styles.backgroundImage} resizeMode="cover">
       <LinearGradient colors={["rgba(247, 247, 247, 0.8)", "rgba(255, 255, 255, 0.8)"]} style={styles.container}>
         <Animated.View style={[styles.formContainer, { opacity: fadeAnim }]}>
           <Text style={styles.title}>{isSignUp ? "Inscription" : "Connexion"}</Text>
 
-          {/* Affichage conditionnel des champs selon le mode */}
           {isSignUp && (
             <InputField
               placeholder="Nom d'utilisateur"
-              value={formData.username}
-              onChangeText={(value: string) => handleChange("username", value)}
-              error={errors.username}
+              value={formData.name || ""}
+              onChangeText={(value) => handleChange("name", value)}
+              error={errors.name}
             />
           )}
 
           <InputField
-            placeholder="Email"
-            value={formData.email}
-            onChangeText={(value: string) => handleChange("email", value)}
-            error={errors.email}
-            keyboardType="email-address"
+            placeholder="Numéro de téléphone"
+            value={formData.phoneNumber}
+            onChangeText={(value) => handleChange("phoneNumber", value)}
+            error={errors.phoneNumber}
+            keyboardType="phone-pad"
           />
+
+          {isSignUp && (
+            <InputField
+              placeholder="Email"
+              value={formData.email}
+              onChangeText={(value) => handleChange("email", value)}
+              error={errors.email}
+              keyboardType="email-address"
+            />
+          )}
 
           <PasswordField
             placeholder="Mot de passe"
             value={formData.password}
-            onChangeText={(value: string) => handleChange("password", value)}
+            onChangeText={(value) => handleChange("password", value)}
             error={errors.password}
             showPassword={showPassword}
             toggleShowPassword={() => setShowPassword(!showPassword)}
@@ -111,15 +159,14 @@ const Login = () => {
           {isSignUp && (
             <PasswordField
               placeholder="Confirmer le mot de passe"
-              value={formData.confirmPassword}
-              onChangeText={(value: string) => handleChange("confirmPassword", value)}
+              value={formData.confirmPassword || ""}
+              onChangeText={(value) => handleChange("confirmPassword", value)}
               error={errors.confirmPassword}
               showPassword={showPassword}
               toggleShowPassword={() => setShowPassword(!showPassword)}
             />
           )}
 
-          {/* Loader en cas de chargement */}
           {loading ? (
             <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
           ) : (
@@ -135,14 +182,15 @@ const Login = () => {
   );
 };
 
-/* ✅ Composant réutilisable pour les champs de saisie */
-const InputField = ({ placeholder, value, onChangeText, error, keyboardType = "default" }: {
+interface InputFieldProps {
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
   error?: string;
-  keyboardType?: string;
-}) => (
+  keyboardType?: KeyboardTypeOptions;
+}
+
+const InputField: React.FC<InputFieldProps> = ({ placeholder, value, onChangeText, error, keyboardType = "default" }) => (
   <View style={styles.inputContainer}>
     <TextInput
       style={[styles.input, error && styles.inputError]}
@@ -150,21 +198,18 @@ const InputField = ({ placeholder, value, onChangeText, error, keyboardType = "d
       placeholderTextColor="#666"
       value={value}
       onChangeText={onChangeText}
-      keyboardType={keyboardType as any}
+      keyboardType={keyboardType}
     />
     {error && <Text style={styles.errorText}>{error}</Text>}
   </View>
 );
 
-/* ✅ Composant réutilisable pour le champ mot de passe */
-const PasswordField = ({ placeholder, value, onChangeText, error, showPassword, toggleShowPassword }: {
-  placeholder: string;
-  value: string;
-  onChangeText: (text: string) => void;
-  error?: string;
+interface PasswordFieldProps extends InputFieldProps {
   showPassword: boolean;
   toggleShowPassword: () => void;
-}) => (
+}
+
+const PasswordField: React.FC<PasswordFieldProps> = ({ placeholder, value, onChangeText, error, showPassword, toggleShowPassword }) => (
   <View style={styles.inputContainer}>
     <View style={[styles.passwordContainer, error && styles.inputError]}>
       <TextInput
