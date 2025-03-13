@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createService } from "@/redux/slices/serviceSlice";
@@ -8,19 +9,57 @@ interface CreateServicePopupProps {
 }
 
 const CreateServicePopup: React.FC<CreateServicePopupProps> = ({ onClose }) => {
-  const [serviceName, setServiceName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, error } = useSelector((state: RootState) => state.service);
+  const [serviceData, setServiceData] = useState({
+    name: "",
+    description: "",
+    price: 0,
+    imageUrl: "",
+  });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
+  // Fonction pour gérer l'upload de l'image sur Cloudinary
+  const handleImageUpload = async () => {
+    if (!imageFile) return;
+
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("file", imageFile);
+    formData.append("upload_preset", "nambacloud"); // À remplacer par ton upload preset
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/ddyyzgopb/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
+      setServiceData((prev) => ({ ...prev, imageUrl: data.secure_url }));
+    } catch (error) {
+      console.error("Erreur d'upload d'image", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fonction pour soumettre le formulaire
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!serviceName.trim() || !price.trim()) return;
 
-    await dispatch(createService({ name: serviceName, description, price: parseFloat(price) }));
-    onClose(); // Ferme le popup après soumission
+    if (!serviceData.name || !serviceData.price || !serviceData.imageUrl) {
+      alert("Veuillez remplir tous les champs et uploader une image.");
+      return;
+    }
+    if (!serviceData.imageUrl || !serviceData.imageUrl.startsWith("http")) {
+      alert("L'image n'a pas été téléchargée. Veuillez réessayer.");
+      return;
+    }
+    dispatch(createService(serviceData));
+    onClose();
   };
 
   return (
@@ -28,16 +67,16 @@ const CreateServicePopup: React.FC<CreateServicePopupProps> = ({ onClose }) => {
       <div className="popup-form">
         <h2>Créer un Nouveau Service</h2>
         {/* Vérifie si l'erreur est une chaîne et l'affiche */}
-        {error && <p className="error">{error}</p>}
+        {/* {error && <p className="error">{error}</p>} */}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="serviceName">Nom du Service</label>
             <input
               type="text"
               id="serviceName"
-              value={serviceName}
-              onChange={(e) => setServiceName(e.target.value)}
               placeholder="Nom du service"
+              value={serviceData.name}
+              onChange={(e) => setServiceData({ ...serviceData, name: e.target.value })}
               required
             />
           </div>
@@ -45,9 +84,9 @@ const CreateServicePopup: React.FC<CreateServicePopupProps> = ({ onClose }) => {
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Description du service"
+              placeholder="Description"
+              value={serviceData.description}
+              onChange={(e) => setServiceData({ ...serviceData, description: e.target.value })}
             />
           </div>
           <div className="input-group">
@@ -55,15 +94,29 @@ const CreateServicePopup: React.FC<CreateServicePopupProps> = ({ onClose }) => {
             <input
               type="number"
               id="price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="Prix du service"
+              placeholder="Prix"
+              value={serviceData.price}
+              onChange={(e) => setServiceData({ ...serviceData, price: Number(e.target.value) })}
               required
             />
           </div>
+          <div className="input-group">
+            <label htmlFor="image">Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+            />
+            <button type="button" onClick={handleImageUpload} disabled={loading}>
+              {loading ? "Upload en cours..." : "Uploader Image"}
+            </button>
+            {serviceData.imageUrl && (
+              <img src={serviceData.imageUrl} alt="Aperçu" style={{ width: "200px", borderRadius: "8px", marginTop: "10px" }} />
+            )}
+          </div>
           <div className="popup-actions">
             <button type="submit" className="btn primary" disabled={loading}>
-              {loading ? "Envoi..." : "Valider"}
+              {loading ? "Création..." : "Valider"}
             </button>
             <button type="button" className="btn secondary" onClick={onClose}>
               Annuler
