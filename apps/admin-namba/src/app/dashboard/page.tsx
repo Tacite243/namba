@@ -4,16 +4,28 @@ import { FaEdit, FaTrash, FaCheck } from "react-icons/fa";
 import "@/styles/globals.css";
 import PopupForm from "@/components/popupForm";
 import CreateServicePopup from "@/components/createServicePopup";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { createCollector } from "@/redux/slices/collectorSlice";
 
 
 
 const Dashboard = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const {loading, error, success} = useSelector((state: RootState) => state.collector);
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [showServicePopup, setShowServicePopup] = useState(false);
   const [orders, setOrders] = useState([
     { id: 1, client: "John Doe", status: "Non affectée", collector: "Non assigné" },
     { id: 2, client: "Jane Smith", status: "Affectée", collector: "Paul" },
   ]);
+  const [newCollector, setNewCollector] = useState({
+    name: "",
+    email: "",
+    password: "",
+    phoneNumber: "",
+  });
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -26,9 +38,12 @@ const Dashboard = () => {
   const handleShowServicePopup = () => setShowServicePopup(true);
   const handleCloseServicePopup = () => setShowServicePopup(false);
 
+  const handleCreateCollector = async () => {
+    dispatch(createCollector(newCollector));
+  };
+
   return (
     <div className="container">
-      {/* En-tête */}
       <header className="header">
         <h1>Tableau de Bord Administrateur</h1>
       </header>

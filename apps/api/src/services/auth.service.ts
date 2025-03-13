@@ -36,6 +36,32 @@ export const registerUser = async (name: string, email: string, password: string
   });
 };
 
+export const registerAdmin = async (name: string, email: string, password: string, role: Role = Role.SUPER_ADMIN, phoneNumber: string) => {
+  if (!isValidRole(role)) {
+    throw new Error("Rôle invalide.");
+  }
+
+  // Hash du mot de passe avant de l'assigner
+  const hashedPass = await hashedPassword(password, SALT_ROUNDS);
+
+  return prisma.user.create({
+    data: { name, email, password: hashedPass, role, phoneNumber: phoneNumber },
+  });
+};
+
+export const registerCollector = async (name: string, email: string, password: string, role: Role = Role.ADMIN, phoneNumber: string) => {
+  if (!isValidRole(role)) {
+    throw new Error("Rôle invalide.");
+  }
+
+  // Hash du mot de passe avant de l'assigner
+  const hashedPass = await hashedPassword(password, SALT_ROUNDS);
+
+  return prisma.user.create({
+    data: { name, email, password: hashedPass, role, phoneNumber: phoneNumber },
+  });
+};
+
 /**
  * Connexion utilisateur.
  */

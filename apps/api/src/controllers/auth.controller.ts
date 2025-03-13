@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { registerUser, loginUser, findUserById, updateUser, deleteUser, searchUsers } from "../services/auth.service";
+import { registerUser, loginUser, findUserById, updateUser, deleteUser, searchUsers, registerAdmin, registerCollector } from "../services/auth.service";
 import { Role } from "@prisma/client"; // Importez l'énumération Role depuis Prisma
 import { handleAsync } from "../middlewares/errorHandler";
 import prisma from "../config/db";
@@ -10,6 +10,20 @@ export const register = handleAsync(async (req: Request, res: Response, next: Ne
   const user = await registerUser(name, email, password, role as Role, phoneNumber);
   res.status(201).json(user);
 });
+
+
+export const createAdmin = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { name, email, password, role = "SUPER_ADMIN", phoneNumber } = req.body;
+  const user = await registerAdmin(name, email, password, role as Role, phoneNumber);
+  res.status(201).json(user);
+});
+
+export const createCollector = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { name, email, password, role = "ADMIN", phoneNumber } = req.body;
+  const user = await registerCollector(name, email, password, role as Role, phoneNumber);
+  res.status(201).json(user);
+});
+
 
 export const login = handleAsync(async (req: Request, res: Response) => {
   const { phoneNumber, password } = req.body;
