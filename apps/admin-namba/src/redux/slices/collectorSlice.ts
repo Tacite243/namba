@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/auth/createCollector";
-const ADMIN_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; // Remplace par ton token
+import { API_URL } from "../constantes";
+import { RootState } from "../store";
 
 interface CollectorState {
   loading: boolean;
@@ -16,20 +15,31 @@ const initialState: CollectorState = {
   success: false,
 };
 
-// Thunk pour créer un collecteur
+// Thunk pour créer un collecteur (avec vérification du rôle)
 export const createCollector = createAsyncThunk(
   "collector/create",
-  async (collectorData: { name: string; email: string; password: string; phoneNumber: string }, thunkAPI) => {
+  async (
+    collectorData: { name: string; email: string; password: string; phoneNumber: string },
+    { getState, rejectWithValue }
+  ) => {
+    const state = getState() as RootState;
+    const token = localStorage.getItem("token");
+    const user = state.auth.user; // Récupérer l'utilisateur depuis Redux
+
+    if (!token || !user || (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN")) {
+      return rejectWithValue("Accès refusé : seuls l'administrateur et le super administrateur peuvent créer un collecteur.");
+    }
+
     try {
-      const response = await axios.post(API_URL, collectorData, {
+      const response = await axios.post(`${API_URL}/auth/createCollector`, collectorData, {
         headers: {
-          Authorization: `Bearer ${ADMIN_TOKEN}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
       return response.data;
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Une erreur s'est produite");
+      return rejectWithValue(error.response?.data || "Une erreur s'est produite");
     }
   }
 );
