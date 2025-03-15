@@ -7,7 +7,11 @@ const router = express.Router();
 router.post("/",
     // verifyRole("ADMIN"),
     addService);
-router.get("/", listServices);
-router.delete("/:id", isAdminOrCollector, removeService);
+router.get("/",
+    // verifyRole("ADMIN"),
+    listServices);
+router.delete("/:id",
+    // verifyRole("ADMIN"),
+    removeService);
 
 export default router;

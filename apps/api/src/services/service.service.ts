@@ -6,11 +6,14 @@ import prisma from "../config/db";
 export const createService = async (
     name: string,
     description: string,
-    image: string,
-    like: number,
+    image: any,
+    like: number = 0,
     price: number,
-    unit: string
+    unit: string = "pièce"
 ) => {
+    // if (!image || !image.startsWith("http")) {
+    //     throw new Error("L'image n'est pas valide.");
+    // }
     return await prisma.service.create({
         data: {
             name,

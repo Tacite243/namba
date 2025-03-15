@@ -1,8 +1,8 @@
 "use client"
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { createService } from "@/redux/slices/serviceSlice";
-import { AppDispatch, RootState } from "@/redux/store"
+import { AppDispatch } from "@/redux/store";
 
 interface CreateServicePopupProps {
   onClose: () => void;
@@ -14,7 +14,9 @@ const CreateServicePopup: React.FC<CreateServicePopupProps> = ({ onClose }) => {
     name: "",
     description: "",
     price: 0,
-    imageUrl: "",
+    unit: "pièce",
+    like: 0,
+    image: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -26,7 +28,7 @@ const CreateServicePopup: React.FC<CreateServicePopupProps> = ({ onClose }) => {
     setLoading(true);
     const formData = new FormData();
     formData.append("file", imageFile);
-    formData.append("upload_preset", "nambacloud"); // À remplacer par ton upload preset
+    formData.append("upload_preset", "nambacloud");
 
     try {
       const res = await fetch(
@@ -38,9 +40,14 @@ const CreateServicePopup: React.FC<CreateServicePopupProps> = ({ onClose }) => {
       );
 
       const data = await res.json();
-      setServiceData((prev) => ({ ...prev, imageUrl: data.secure_url }));
+      if (data.secure_url) {
+        setServiceData((prev) => ({ ...prev, image: data.secure_url }));
+      } else {
+        alert("Échec de l'upload de l'image. Veuillez réessayer.");
+      }
     } catch (error) {
       console.error("Erreur d'upload d'image", error);
+      alert("Erreur lors du téléversement de l'image.");
     } finally {
       setLoading(false);
     }
@@ -50,15 +57,16 @@ const CreateServicePopup: React.FC<CreateServicePopupProps> = ({ onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!serviceData.name || !serviceData.price || !serviceData.imageUrl) {
+    if (!serviceData.name || !serviceData.price || !serviceData.image) {
       alert("Veuillez remplir tous les champs et uploader une image.");
       return;
     }
-    if (!serviceData.imageUrl || !serviceData.imageUrl.startsWith("http")) {
+    if (!serviceData.image.startsWith("http")) {
       alert("L'image n'a pas été téléchargée. Veuillez réessayer.");
       return;
     }
     dispatch(createService(serviceData));
+    console.log(serviceData);
     onClose();
   };
 
@@ -66,8 +74,6 @@ const CreateServicePopup: React.FC<CreateServicePopupProps> = ({ onClose }) => {
     <div className="popup-overlay">
       <div className="popup-form">
         <h2>Créer un Nouveau Service</h2>
-        {/* Vérifie si l'erreur est une chaîne et l'affiche */}
-        {/* {error && <p className="error">{error}</p>} */}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="serviceName">Nom du Service</label>
@@ -110,8 +116,12 @@ const CreateServicePopup: React.FC<CreateServicePopupProps> = ({ onClose }) => {
             <button type="button" onClick={handleImageUpload} disabled={loading}>
               {loading ? "Upload en cours..." : "Uploader Image"}
             </button>
-            {serviceData.imageUrl && (
-              <img src={serviceData.imageUrl} alt="Aperçu" style={{ width: "200px", borderRadius: "8px", marginTop: "10px" }} />
+            {serviceData.image && (
+              <img
+                src={serviceData.image}
+                alt="Aperçu"
+                style={{ width: "200px", borderRadius: "8px", marginTop: "10px" }}
+              />
             )}
           </div>
           <div className="popup-actions">
