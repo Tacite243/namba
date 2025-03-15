@@ -19,7 +19,7 @@ interface AuthState {
 
 // 🎯 Vérifier si l'utilisateur est encore authentifié
 const checkAuthStatus = () => {
-    if (typeof window === "undefined") return false;
+    // if (typeof window === "undefined") return false;
 
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");

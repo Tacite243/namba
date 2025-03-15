@@ -420,6 +420,14 @@ h2 {
   color: var(--primary-color);
 }
 
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* padding: 20px 0; */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* Styles du contenu principal */
 .main-content {
   margin-left: 220px; /* Décalage pour laisser de la place à la sidebar */

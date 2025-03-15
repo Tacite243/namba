@@ -6,7 +6,6 @@ import { createService, deleteService, getAllServices } from "../services/servic
  * Ajouter un service
  */
 export const addService = handleAsync(async (req: Request, res: Response) => {
-    console.log("Données reçues :", req.body);
     const { name, description, image, like, price, unit } = req.body;
     const service = await createService(name, description, image, like, price, unit);
     res.status(201).json(service);

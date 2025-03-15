@@ -66,7 +66,6 @@ const CreateServicePopup: React.FC<CreateServicePopupProps> = ({ onClose }) => {
       return;
     }
     dispatch(createService(serviceData));
-    console.log(serviceData);
     onClose();
   };
 
