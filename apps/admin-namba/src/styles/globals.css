@@ -15,7 +15,7 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
   margin: 0;
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 .spinner-container {
@@ -223,6 +223,22 @@ body {
   align-items: center;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.02); /* Léger fond gris */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.auth-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Overlay sombre pour améliorer la lisibilité */
+  backdrop-filter: blur(5px);
+  z-index: 1; /* Place l'overlay derrière la carte */
 }
 
 .auth-card {
@@ -233,6 +249,8 @@ body {
   text-align: center;
   width: 100%;
   max-width: 400px;
+  position: relative;
+  z-index: 2;
 }
 
 h2 {
@@ -260,6 +278,7 @@ h2 {
   border-radius: 5px;
   font-size: 16px;
   transition: border 0.3s;
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .input-group input:focus {

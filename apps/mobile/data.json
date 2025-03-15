@@ -28,13 +28,13 @@
             "unit": "le kilo"
         },
         {
-            "name": "Service personnalisé",
-            "description": "Exprimez ce que vous souhaitez que nous puissions faire pour vous",
+            "name": "Repassage professionnel",
+            "description": "Nous nettoyons vos vetements jusqu'à ce qu'ils deviennent comme neuf!",
             "image": "@/assets/images/services/professional-industrial-cleaner-protective-uniform-cleaning-floor-food-processing-plant.jpg",
             "hover": "@/assets/images/images/services/close-up-mop-cleaning-industrial-plant-floor.jpg",
             "like": 4,
-            "price": "",
-            "unit": "personnalisé"
+            "price": 5,
+            "unit": "le kilo"
         },
         {
             "name": "Netoyage des Tapis",

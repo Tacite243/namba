@@ -21,9 +21,9 @@ export default function SideBar() {
             {/* Menu */}
             <ul>
                 <li><Link href="/dashboard">Dashboard</Link></li>
-                <li><Link href="/services">Services</Link></li>
-                <li><Link href="/collecteurs">Collecteurs</Link></li>
-                <li><Link href="/parametres">Paramètres</Link></li>
+                <li><Link href="/dashboard/services">Services</Link></li>
+                <li><Link href="/dashboard/collector">Collecteurs</Link></li>
+                <li><Link href="/dashboard/settings">Paramètres</Link></li>
             </ul>
         </div>
     );
