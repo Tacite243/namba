@@ -23,19 +23,6 @@ const AuthPage = () => {
   useEffect(() => {
     if (isAuthenticated) {
       router.push("/dashboard");
-      //   } else if (typeof window !== "undefined") {
-      //     const storedToken = localStorage.getItem("token");
-      //     const storedDate = localStorage.getItem("loginDate");
-
-      //     if (storedToken && storedDate) {
-      //       const loginDate = new Date(storedDate);
-      //       const now = new Date();
-      //       const threeMonths = 90 * 24 * 60 * 60 * 1000;
-
-      //       if (now.getTime() - loginDate.getTime() < threeMonths) {
-      //         dispatch(setAuthenticated(true));
-      //       }
-      //     }
     }
   }, [isAuthenticated, dispatch, router]);
 

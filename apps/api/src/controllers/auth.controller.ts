@@ -13,13 +13,13 @@ export const register = handleAsync(async (req: Request, res: Response, next: Ne
 
 
 export const createAdmin = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { name, email, password, role = "SUPER_ADMIN", phoneNumber } = req.body;
+  const { name, email, password, role = "ADMIN", phoneNumber } = req.body;
   const user = await registerAdmin(name, email, password, role as Role, phoneNumber);
   res.status(201).json(user);
 });
 
 export const createCollector = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { name, email, password, role = "ADMIN", phoneNumber } = req.body;
+  const { name, email, password, role = "COLLECTOR", phoneNumber } = req.body;
   const user = await registerCollector(name, email, password, role as Role, phoneNumber);
   res.status(201).json(user);
 });

@@ -8,12 +8,6 @@ const router = express.Router();
 
 // Routes d'authentification
 
-router.post(
-  "/createAdmin",
-  authenticateUser,
-  verifyRole(Role.SUPER_ADMIN),
-  register
-);
 router.post("/register", register);
 router.post("/createAdmin", createAdmin, verifyRole("SUPER_ADMIN"));
 router.post("/createCollector", createCollector, verifyRole("ADMIN"));
