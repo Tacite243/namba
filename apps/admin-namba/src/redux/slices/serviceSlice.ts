@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { API_URL } from "../constantes";
 
 // Création d'une instance Axios avec la base URL
 const api = axios.create({
-  baseURL: "http://localhost:5000/api/service",
+  baseURL: API_URL + "/service",
   headers: {
     "Content-Type": "application/json",
   },

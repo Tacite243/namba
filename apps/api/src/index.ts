@@ -51,7 +51,7 @@ const startServer = async () => {
 
     server.listen(PORT, async () => {
       await initSuperAdmin();
-      console.log(`🚀 Serveur en ligne sur http://localhost:${PORT}`);
+      // console.log(`🚀 Serveur en ligne sur http://localhost:${PORT}`);
     });
 
     server.on('error', (error: NodeJS.ErrnoException) => {

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { API_URL } from "@/redux/constantes";
 
 interface PopupFormProps {
   onClose: () => void;
@@ -28,7 +29,7 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
     setSuccess(false);
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/createCollector", {
+      const response = await fetch(API_URL + "/auth/createCollector", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

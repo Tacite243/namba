@@ -11,9 +11,9 @@ export const createService = async (
     price: number,
     unit: string = "pièce"
 ) => {
-    // if (!image || !image.startsWith("http")) {
-    //     throw new Error("L'image n'est pas valide.");
-    // }
+    if (!image || !image.startsWith("http")) {
+        throw new Error("L'image n'est pas valide.");
+    }
     return await prisma.service.create({
         data: {
             name,
