@@ -1,3 +1,4 @@
+"use client"
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_URL } from "../constantes";
@@ -38,8 +39,8 @@ export const createCollector = createAsyncThunk(
         },
       });
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Une erreur s'est produite");
+    } catch (error: unknown) {
+      return rejectWithValue(error || "Une erreur s'est produite");
     }
   }
 );

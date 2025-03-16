@@ -1,3 +1,4 @@
+"use client"
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_URL } from "../constantes";
@@ -19,7 +20,7 @@ interface AuthState {
 
 // 🎯 Vérifier si l'utilisateur est encore authentifié
 const checkAuthStatus = () => {
-    // if (typeof window === "undefined") return false;
+    if (typeof window === "undefined") return false;
 
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
@@ -44,9 +45,11 @@ export const loginUser = createAsyncThunk(
             localStorage.setItem("user", JSON.stringify(response.data.user));
             localStorage.setItem("loginDate", new Date().toISOString());
             return response.data;
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.log(error)
-            return rejectWithValue(error.response?.data?.message || "Erreur lors de la connexion");
+            if (error instanceof Error) {
+                return rejectWithValue(error || "Erreur lors de la connexion");
+            }
         }
     }
 );
@@ -57,8 +60,11 @@ export const registerUser = createAsyncThunk(
         try {
             const response = await axios.post(`${API_URL}/auth/register`, { name, email, phoneNumber, password });
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.response?.data?.message || "Erreur lors de l'inscription");
+        } catch (error: unknown) {
+            console.log(error)
+            if (error instanceof Error) {
+                return rejectWithValue(error || "Erreur lors de l'inscription");
+            }
         }
     }
 );

@@ -1,13 +1,11 @@
 "use client";
-
-import { useState } from "react";
 import { FaEdit, FaTrash, FaCheck } from "react-icons/fa";
 
 const Services = () => {
-  const [services, setServices] = useState([
+  const services = [
     { id: 1, name: "Pressing Express", category: "Nettoyage", status: "Actif" },
     { id: 2, name: "Repassage Premium", category: "Repassage", status: "Inactif" },
-  ]);
+  ]
 
   return (
     <div className="container">

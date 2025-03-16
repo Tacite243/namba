@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
-import { loginUser, registerUser, setAuthenticated } from "@/redux/slices/authSlice";
+import { loginUser, registerUser} from "@/redux/slices/authSlice";
 
 const AuthPage = () => {
   const router = useRouter();
@@ -12,7 +12,6 @@ const AuthPage = () => {
   const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const [isLogin, setIsLogin] = useState(true);
-  const [isLoadingApp, setIsLoadingApp] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",

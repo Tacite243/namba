@@ -20,7 +20,7 @@ interface Service {
   price: number;
   unit: string;
   createdAt: string;
-  reservations?: any[]; // À définir selon la structure des réservations
+  reservations?: []; // À définir selon la structure des réservations
 }
 
 // Interface de l'état global du slice
@@ -42,8 +42,8 @@ export const fetchServices = createAsyncThunk("service/fetchServices", async (_,
   try {
     const response = await api.get<Service[]>("/");
     return response.data;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || "Erreur lors du chargement des services");
+  } catch (error: unknown) {
+    return rejectWithValue(error || "Erreur lors du chargement des services");
   }
 });
 
@@ -70,8 +70,8 @@ export const createService = createAsyncThunk(
         like: 0 // Valeur par défaut
       });
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Erreur lors de la création du service");
+    } catch (error: unknown) {
+      return rejectWithValue(error || "Erreur lors de la création du service");
     }
   }
 );
