@@ -1,9 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { API_URL } from "../constantes";
+import { API_URL } from "../constantes";
 
-const API_URL = "http://localhost:5000/api"
 
 // Définition des types
 interface User {
