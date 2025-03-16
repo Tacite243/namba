@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cors());
 app.use(errorHandler);
 
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), { flags: 'a' });
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'deploylogs/access.log'), { flags: 'a' });
 
 // Configurer morgan
 app.use(morgan(config.nodeEnv === 'development' ? "dev" : "combined", { stream: accessLogStream }));
