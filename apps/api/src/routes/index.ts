@@ -7,7 +7,7 @@ import serviceRoute from "./service.routes"
 const router = express.Router();
 
 router.use("/auth", userRoutes);
-router.use("/reservation", reservationRoutes);
 router.use("/service", serviceRoute);
+router.use("/reservation", reservationRoutes)
 
 export default router;

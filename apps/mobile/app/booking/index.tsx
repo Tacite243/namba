@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Animated 
+import {
+  View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Animated
 } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import DatePicker from 'react-native-date-picker';
 import { colors } from '@/constants/Colors';
 import { fonts } from '@/constants/fonts';
-import { ArrowLeft, Calendar, CheckCircle, Phone, User } from 'lucide-react-native';
+import { ArrowLeft, Calendar, CheckCircle, MapPin, Phone, User } from 'lucide-react-native';
 
 const Booking = () => {
   const navigation = useNavigation();
@@ -34,6 +34,7 @@ const Booking = () => {
 
   const onSubmit = () => {
     Alert.alert("Réservation confirmée", `Votre réservation pour ${service || "le service"} a été envoyée.`);
+    navigation.goBack();
   };
 
   return (
@@ -48,7 +49,7 @@ const Booking = () => {
       {description && <Text style={styles.detailText}>📌 {description}</Text>}
       {price && <Text style={styles.detailText}>💰 {price} {unit}</Text>}
 
-      {/* Champ Nom */}
+      {/* Nom */}
       <View style={styles.inputContainer}>
         <User color={colors.primary} size={20} style={styles.icon} />
         <Controller
@@ -56,72 +57,92 @@ const Booking = () => {
           name="name"
           rules={{ required: "Le nom est requis" }}
           render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={[styles.input, errors.name && styles.inputError]}
+            <TextInput style={[styles.input, errors.name && styles.inputError]}
               placeholder="Votre nom"
               placeholderTextColor={colors.text}
               onChangeText={onChange}
               value={value}
-              autoCapitalize="words"
-              returnKeyType="next"
-              maxLength={50}
             />
           )}
         />
       </View>
-      {errors.name && <Text style={styles.errorText}>{errors.name.message?.toString() ?? ""}</Text>}
+      {/* {errors.name && <Text style={styles.errorText}>{errors.name.message}</Text>} */}
 
-      {/* Champ Téléphone */}
+      {/* Téléphone */}
       <View style={styles.inputContainer}>
         <Phone color={colors.primary} size={20} style={styles.icon} />
         <Controller
           control={control}
-          name="phone"
+          name="whatsappNumber"
           rules={{
-            required: "Le téléphone est requis",
+            required: "Numéro WhatsApp requis",
             pattern: { value: /^[0-9]{9,12}$/, message: "Numéro invalide" }
           }}
           render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={[styles.input, errors.phone && styles.inputError]}
-              placeholder="Votre téléphone"
-              placeholderTextColor={colors.text}
+            <TextInput style={[styles.input, errors.whatsappNumber && styles.inputError]}
+              placeholder="Numéro WhatsApp"
               keyboardType="phone-pad"
               onChangeText={onChange}
               value={value}
-              maxLength={12}
-              returnKeyType="done"
             />
           )}
         />
       </View>
-      {errors.phone && <Text style={styles.errorText}>{errors.phone.message?.toString() ?? ""}</Text>}
+      {/* {errors.whatsappNumber && <Text style={styles.errorText}>{errors.whatsappNumber.message}</Text>} */}
+
+      {/* Adresse */}
+      <View style={styles.inputContainer}>
+        <MapPin color={colors.primary} size={20} style={styles.icon} />
+        <Controller
+          control={control}
+          name="pickupAddress"
+          rules={{ required: "Adresse requise" }}
+          render={({ field: { onChange, value } }) => (
+            <TextInput style={[styles.input, errors.pickupAddress && styles.inputError]}
+              placeholder="Adresse de collecte"
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
+        />
+      </View>
+      {/* {errors.pickupAddress && <Text style={styles.errorText}>{errors.pickupAddress.message}</Text>} */}
+
+      {/* Email */}
+      <View style={styles.inputContainer}>
+        <Controller
+          control={control}
+          name="email"
+          rules={{
+            required: "Email requis",
+            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Email invalide" }
+          }}
+          render={({ field: { onChange, value } }) => (
+            <TextInput style={[styles.input, errors.email && styles.inputError]}
+              placeholder="Votre email"
+              keyboardType="email-address"
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
+        />
+      </View>
+      {/* {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>} */}
 
       {/* Sélecteur de Date */}
       <TouchableOpacity style={styles.dateInput} onPress={() => setOpen(true)}>
         <Calendar color={colors.primary} size={20} style={styles.icon} />
         <Text style={styles.dateText}>{date.toISOString().split('T')[0]}</Text>
       </TouchableOpacity>
-      <DatePicker 
-        modal 
-        open={open} 
-        date={date} 
-        mode="date" 
-        onConfirm={(selectedDate) => {
-          setDate(selectedDate);
-          setOpen(false);
-        }} 
-        onCancel={() => setOpen(false)} 
+      <DatePicker modal open={open} date={date} mode="date"
+        onConfirm={(selectedDate) => { setDate(selectedDate); setOpen(false); }}
+        onCancel={() => setOpen(false)}
       />
 
       {/* Bouton Réserver */}
       <Animated.View style={{ transform: [{ scale: animatedScale }] }}>
-        <TouchableOpacity 
-          style={styles.button} 
-          onPress={handleSubmit(onSubmit)}
-          onPressIn={handlePressIn}
-          onPressOut={handlePressOut}
-        >
+        <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}
+          onPressIn={handlePressIn} onPressOut={handlePressOut}>
           <CheckCircle color={colors.secondary} size={20} style={styles.icon} />
           <Text style={styles.buttonText}>Réserver</Text>
         </TouchableOpacity>

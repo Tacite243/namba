@@ -1,7 +1,6 @@
 import express from "express";
 import { register, getAllUsers, getUserById, updateUserById, deleteUserById, searchUsersByRole, login, createAdmin, createCollector } from "../controllers/auth.controller";
 import { authenticateUser, verifyRole } from "../middlewares/auth.middleware";
-import { Role } from "@prisma/client";
 
 
 const router = express.Router();
