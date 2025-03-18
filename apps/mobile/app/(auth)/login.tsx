@@ -115,7 +115,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <ImageBackground source={require('@/assets/images/bubbles.png')} style={styles.backgroundImage} resizeMode="cover">
+    <ImageBackground source={require('@/assets/images/LOGO_NAMBA .png')} style={styles.backgroundImage} resizeMode="cover">
       <LinearGradient colors={["rgba(247, 247, 247, 0.8)", "rgba(255, 255, 255, 0.8)"]} style={styles.container}>
         <Animated.View style={[styles.formContainer, { opacity: fadeAnim }]}>
           <Text style={styles.title}>{isSignUp ? "Inscription" : "Connexion"}</Text>
@@ -232,8 +232,9 @@ const PasswordField: React.FC<PasswordFieldProps> = ({ placeholder, value, onCha
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    width: '100%',
-    height: '100%',
+    width: '96%',
+    height: '80%',
+    margin: '2%',
     justifyContent: 'center',
   },
   container: {

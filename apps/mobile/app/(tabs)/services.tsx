@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 // import LottieView from 'lottie-react-native';
 import { colors } from '@/constants/Colors';
@@ -16,56 +16,19 @@ import Image5 from '@/assets/images/services/professional-industrial-cleaner-pro
 import Image6 from '@/assets/images/services/close-up-mop-cleaning-industrial-plant-floor.jpg';
 import Image7 from '@/assets/images/services/people-taking-care-office-cleaning.jpg';
 import Image8 from '@/assets/images/services/person-taking-care-office.jpg';
+import { useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
+import { useSelector } from 'react-redux';
+import { fetchServices } from '@/redux/slices/serviceSlices';
 
 const Services = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const services = [
-    {
-      name: 'Lavage des vêtements et linges',
-      description: 'Nous nettoyons vos vêtements jusqu\'à ce qu\'ils deviennent comme neufs !',
-      image: Image1, // Utilisez l'image importée
-      hover: Image2,
-      like: 5,
-      price: 4000,
-      unit: 'le kilo',
-    },
-    {
-      name: 'Nettoyage à sec',
-      description: 'Pour vos pièces les plus précieuses',
-      image: Image3,
-      hover: Image4,
-      like: 4,
-      price: 6000,
-      unit: 'le kilo',
-    },
-    {
-      name: 'Repassage professionnel',
-      description: 'Nous repassons vos vêtements avec soin.',
-      image: Image5,
-      hover: Image6,
-      like: 4,
-      price: 3000,
-      unit: 'le kilo',
-    },
-    {
-      name: 'Service personnalisé',
-      description: 'Exprimez ce que vous souhaitez que nous puissions faire pour vous.',
-      image: Image5,
-      hover: Image6,
-      like: 4,
-      price: '',
-      unit: 'personnalisé',
-    },
-    {
-      name: 'Nettoyage des Tapis et meubles',
-      description: 'Nous nettoyons vos tapis jusqu\'à ce qu\'ils deviennent comme neufs !',
-      image: Image7,
-      hover: Image8,
-      like: 4,
-      price: 3,
-      unit: 'le mètre carré',
-    },
-  ];
+  const { services, loading, error } = useSelector((state: RootState) => state.services);
+
+  useEffect(() => {
+    dispatch(fetchServices());
+  }, [dispatch]);
 
   return (
     <LinearGradient
@@ -82,22 +45,31 @@ const Services = () => {
         {/* Section Services */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Nos Services</Text>
-          {services.map((service, index) => (
-            <ServiceCard
-              key={index}
-              {...service}
-              price={Number(service.price)}
-              onPress={() => router.push({
-                pathname: '/booking',
-                params: {
-                  service: service.name,
-                  description: service.description,
-                  price: service.price,
-                  unit: service.unit
+
+          {loading ? (
+            <ActivityIndicator size="large" color={colors.secondary} />
+          ) : error ? (
+            <Text style={styles.errorText}>{error}</Text>
+          ) : (
+            services.map((service: any) => (
+              <ServiceCard
+                key={service.id}
+                {...service}
+                price={Number(service.price)}
+                onPress={() =>
+                  router.push({
+                    pathname: "/booking",
+                    params: {
+                      service: service.name,
+                      description: service.description,
+                      price: service.price,
+                      unit: service.unit,
+                    },
+                  })
                 }
-              })}
-            />
-          ))}
+              />
+            ))
+          )}
         </View>
 
         {/* Animation Lottie */}
@@ -150,6 +122,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 150,
     marginTop: 20,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 16,
   },
 });
 

@@ -30,7 +30,7 @@ interface AuthState {
 }
 
 // 🎯 Vérifier si l'utilisateur est encore authentifié
-const checkAuthStatus = async (): Promise<boolean> => {
+export const checkAuthStatus = async (): Promise<boolean> => {
   try {
     const storedToken = await AsyncStorage.getItem("token");
     const storedUser = await AsyncStorage.getItem("user");
