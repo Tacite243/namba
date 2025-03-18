@@ -39,6 +39,7 @@ const checkAuthStatus = () => {
 export const loginUser = createAsyncThunk(
     "auth/loginUser",
     async ({ phoneNumber, password }: { phoneNumber: string; password: string }, { rejectWithValue }) => {
+        if (typeof window === "undefined") return false;
         try {
             const response = await axios.post(`${API_URL}/auth/login`, { phoneNumber, password });
             localStorage.setItem("token", response.data.token);

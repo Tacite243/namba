@@ -8,7 +8,6 @@ router.post("/",
     // verifyRole("ADMIN"),
     addService);
 router.get("/",
-    // verifyRole("ADMIN"),
     listServices);
 router.delete("/:id",
     // verifyRole("ADMIN"),
