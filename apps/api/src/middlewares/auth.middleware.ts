@@ -56,13 +56,13 @@ export const verifyRole = (requiredRole: Role) => (req: AuthRequest, res: expres
   next();
 };
 
-export const isAdminOrCollector: RequestHandler = (req: AuthRequest, res, next) => {
+export const isAdminOrSuperAdmin: RequestHandler = (req: AuthRequest, res, next) => {
   if (!req.user) {
     res.status(401).json({ message: "Utilisateur non authentifié" });
     return; // ✅ Ajout d'un return explicite
   }
 
-  if (req.user.role !== Role.ADMIN && req.user.role !== Role.COLLECTOR) {
+  if (req.user.role !== Role.ADMIN && req.user.role !== Role.SUPER_ADMIN) {
     res.status(403).json({ message: "Accès refusé" });
     return; // ✅ Ajout d'un return explicite
   }
