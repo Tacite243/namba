@@ -48,12 +48,14 @@ const Services = () => {
                 price={Number(service.price)}
                 onPress={() =>
                   router.push({
-                    pathname: "/booking",
+                    pathname: "/reservation",
                     params: {
-                      service: service.name,
+                      serviceId: service.id,
+                      name: service.name,
                       description: service.description,
                       price: service.price,
                       unit: service.unit,
+                      image: service.image,
                     },
                   })
                 }
