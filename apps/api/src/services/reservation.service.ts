@@ -1,5 +1,10 @@
 import prisma from "../config/db";
 
+
+export const findAllReservation = async () => {
+    return await prisma.reservation.findMany();
+}
+
 export const createReservation = async (data: any) => {
     const {
         clientId,
@@ -23,9 +28,16 @@ export const createReservation = async (data: any) => {
     } = data;
 
     // Vérifier si le service existe
+    if (!serviceId) {
+        throw new Error("Le serviceId est requis pour créer une réservation.");
+    }
     const service = await prisma.service.findUnique({
         where: { id: serviceId },
     });
+    if (!service) {
+        throw new Error("Le service avec cet ID n'existe pas.");
+    }
+    
 
     if (!service) throw new Error("Service non trouvé");
     // Calcul du prix total avec réduction

@@ -6,16 +6,6 @@ import { colors } from '@/constants/Colors';
 import { fonts } from '@/constants/fonts';
 import { useRouter } from 'expo-router';
 import ServiceCard from '@/components/ServiceCard';
-
-// Importez les images localement
-import Image1 from '@/assets/images/services/young-smiling-woman-wearing-rubber-gloves-cleaning-stove.jpg';
-import Image2 from '@/assets/images/services/woman-holding-rag-detergent-cleaning-cooker.jpg';
-import Image3 from '@/assets/images/services/man-polishing-car-inside-car-service.jpg';
-import Image4 from '@/assets/images/services/man-polishing-car-inside.jpg';
-import Image5 from '@/assets/images/services/professional-industrial-cleaner-protective-uniform-cleaning-floor-food-processing-plant.jpg';
-import Image6 from '@/assets/images/services/close-up-mop-cleaning-industrial-plant-floor.jpg';
-import Image7 from '@/assets/images/services/people-taking-care-office-cleaning.jpg';
-import Image8 from '@/assets/images/services/person-taking-care-office.jpg';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';

@@ -56,17 +56,40 @@ export const verifyRole = (requiredRole: Role) => (req: AuthRequest, res: expres
   next();
 };
 
-export const isAdminOrSuperAdmin: RequestHandler = (req: AuthRequest, res, next) => {
+export const isAdminOrCollector: RequestHandler = (req: AuthRequest, res, next) => {
   if (!req.user) {
     res.status(401).json({ message: "Utilisateur non authentifié" });
     return; // ✅ Ajout d'un return explicite
   }
 
-  if (req.user.role !== Role.ADMIN && req.user.role !== Role.SUPER_ADMIN) {
+  if (req.user.role !== Role.ADMIN && req.user.role !== Role.COLLECTOR) {
     res.status(403).json({ message: "Accès refusé" });
     return; // ✅ Ajout d'un return explicite
   }
 
   next();
   return; // ✅ Ajout pour garantir un retour `void`
+};
+
+/**
+ * Middleware pour vérifier si l'utilisateur est connecté.
+ */
+
+export const isAuthenticated: RequestHandler = (req: AuthRequest, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    res.status(401).json({ message: "Utilisateur non connecté." });
+    return; // ✅ Ajout de return
+  }
+
+  try {
+    const decoded = jwt.verify(token, config.jwtSecret as string) as { userId: string; role: Role };
+
+    req.user = { userId: decoded.userId, role: decoded.role };
+    next();
+  } catch (err) {
+    res.status(403).json({ message: "Session invalide ou expirée." });
+    return; // ✅ Ajout de return
+  }
 };

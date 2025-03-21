@@ -1,3 +1,4 @@
+import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/Colors';
@@ -6,7 +7,7 @@ import NavMenu from '@/components/navMenu';
 export default function TabsLayout() {
   return (
     <>
-    <NavMenu/>
+      <NavMenu />
       <Tabs
         screenOptions={{
           headerShown: false, // Cache le header si non nécessaire

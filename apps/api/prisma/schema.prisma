@@ -123,6 +123,12 @@ enum ReservationStatus {
   CANCELED  // Annulée
 }
 
+enum DeliveryStatus {
+  NOT_STARTED // Pas encore en livraison
+  IN_PROGRESS // En cours de livraison
+  DELIVERED   // Livraison terminée
+}
+
 enum DirtinessLevel {
   LEGER
   MODERE
@@ -139,10 +145,4 @@ enum PaymentMethod {
   CASH
   MOBILE_MONEY
   BANK_TRANSFER
-}
-
-enum DeliveryStatus {
-  NOT_STARTED // Pas encore en livraison
-  IN_PROGRESS // En cours de livraison
-  DELIVERED   // Livraison terminée
 }

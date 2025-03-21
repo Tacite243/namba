@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, ImageBackground, Image } from 'react-native';
 import { colors } from '@/constants/Colors';
 import { fonts } from '@/constants/fonts';
@@ -7,10 +7,17 @@ import HelpSection from '@/components/helpSection';
 import Testimonials from '@/components/testimonialSection';
 import Footer from '@/components/footer';
 import Entreprise from '@/components/entreprise';
+import { useRouter } from 'expo-router';
 
 const { height, width } = Dimensions.get('window');
 
 const Home = () => {
+  const router = useRouter();
+
+  const toServices = () => {
+      router.replace("/(tabs)/services");
+  };
+  
   return (
     <ScrollView>
       <ImageBackground
@@ -25,7 +32,7 @@ const Home = () => {
 
             {/* Bouton */}
             <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Voir Nos Services</Text>
+              <Text style={styles.buttonText} onPress={toServices}>Voir Nos Services</Text>
             </TouchableOpacity>
           </View>
         </View>

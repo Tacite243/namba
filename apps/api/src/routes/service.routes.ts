@@ -1,10 +1,10 @@
 import express from "express";
 import { addService, listServices, removeService } from "../controllers/service.controller";
+import { authenticateUser, verifyRole } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 
 router.post("/",
-    // verifyRole("ADMIN"),
     addService);
 router.get("/",
     listServices);
