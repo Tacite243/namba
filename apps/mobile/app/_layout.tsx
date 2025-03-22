@@ -22,6 +22,7 @@ export default function RootLayout() {
         >
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
+          <Stack.Screen name='(auth)/loginScreen' options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           {/* <Stack.Screen name="booking/index" options={{ title: 'Réservation' }} /> */}
           <Stack.Screen name="reservation/index" options={{ headerShown: false }} />
