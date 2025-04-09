@@ -7,7 +7,7 @@ import NavMenu from '@/components/navMenu';
 export default function TabsLayout() {
   return (
     <>
-      <NavMenu />
+      {/* <NavMenu /> */}
       <Tabs
         screenOptions={{
           headerShown: false, // Cache le header si non nécessaire

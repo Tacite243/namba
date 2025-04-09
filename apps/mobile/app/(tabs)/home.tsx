@@ -1,104 +1,173 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, ImageBackground, Image } from 'react-native';
-import { colors } from '@/constants/Colors';
-import { fonts } from '@/constants/fonts';
-import TeamSection from '@/components/teamSection';
-import HelpSection from '@/components/helpSection';
-import Testimonials from '@/components/testimonialSection';
-import Footer from '@/components/footer';
-import Entreprise from '@/components/entreprise';
-import { useRouter } from 'expo-router';
+import React from "react";
+import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, FlatList, Image, Dimensions } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-const { height, width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
-const Home = () => {
-  const router = useRouter();
+const projects = [
+  {
+    id: "1",
+    title: "Panama Reforestation Project",
+    label: "Gold Standard",
+    image: require("@/assets/images/WhatsApp Image 2025-02-24 at 09.19.33 (1).jpeg"), // Ajoute cette image dans assets
+  },
+  {
+    id: "2",
+    title: "Mauritan Project",
+    label: "Gold Standard",
+    image: require("@/assets/images/WhatsApp Image 2025-02-24 at 09.19.33 (1).jpeg"), // Ajoute cette image aussi
+  },
+];
 
-  const toServices = () => {
-      router.replace("/(tabs)/services");
-  };
-  
-  return (
-    <ScrollView>
-      <ImageBackground
-        source={require('@/assets/images/male-wearing-apron-female-white-t-shirt-smiling-broadly-being-glad-clean.png')} // Remplacez par le chemin de votre image
-        style={styles.backgroundImage}
-        imageStyle={styles.imageStyle}
-      >
-        <View style={styles.overlay}>
-          <View style={styles.content}>
-            <Text style={styles.mainText}>Rendez-vous la</Text>
-            <Text style={styles.highlightedText}>vie Facile</Text>
-
-            {/* Bouton */}
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText} onPress={toServices}>Voir Nos Services</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ImageBackground>
-      <TeamSection />
-      <Testimonials />
-      <HelpSection />
-      <Entreprise />
-      <Footer />
-    </ScrollView>
+export default function Home() {
+  const renderProject = ({ item }: any) => (
+    <View style={styles.projectCard}>
+      <Image source={item.image} style={styles.projectImage} />
+      <View style={styles.overlay}>
+        <Text style={styles.projectTitle}>{item.title}</Text>
+        <Text style={styles.projectLabel}>{item.label}</Text>
+      </View>
+    </View>
   );
-};
+
+  return (
+    <View style={styles.container}>
+      {/* Background with greeting */}
+      <ImageBackground source={require("@/assets/images/WhatsApp Image 2025-02-24 at 09.19.33 (1).jpeg")} style={styles.header}>
+        <Text style={styles.wave}>👋</Text>
+        <Text style={styles.title}>Hi User!,</Text>
+        <Text style={styles.subtitle}>Merci d'avoir choisie NAMBA</Text>
+        <TouchableOpacity style={styles.button}>
+          <Ionicons name="leaf-outline" size={20} color="#fff" />
+          <Text style={styles.buttonText}>Reserver un service !</Text>
+        </TouchableOpacity>
+      </ImageBackground>
+
+      {/* Projects */}
+      <View style={styles.projects}>
+        <View style={styles.projectHeader}>
+          <Text style={styles.projectTitleSection}>Nos services</Text>
+          <Text style={styles.seeAll}>Voir plus !</Text>
+        </View>
+        <FlatList
+          data={projects}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          renderItem={renderProject}
+          style={{ paddingLeft: 20 }}
+        />
+      </View>
+      <View style={styles.pagination}>
+        {projects.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.dot,
+              { backgroundColor: "#cbd5e1" },
+            ]}
+          />
+        ))}
+      </View>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
-    height: height * 0.75,
-    backgroundColor: '#AFC9F0',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    paddingHorizontal: width * 0.05,
-    overflow: 'hidden',
-  },
-  backgroundImage: {
-    height: height * 0.75,
-    width: width,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imageStyle: {
-    resizeMode: 'cover',
-    opacity: 0.8, // Ajustez l'opacité de l'image
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 255, 0.3)', // Calque bleu avec opacité
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#f8fafc",
   },
-  mainText: {
-    fontSize: 28,
-    fontFamily: fonts.bold,
-    color: colors.secondary,
+  header: {
+    height: 330,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 80,
   },
-  highlightedText: {
+  wave: {
     fontSize: 28,
-    fontFamily: fonts.bold,
-    color: colors.yellow,
+    marginBottom: 5,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#fff",
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#e2e8f0",
+    textAlign: "center",
+    marginVertical: 10,
   },
   button: {
-    marginTop: 20,
+    marginTop: 15,
+    flexDirection: "row",
+    backgroundColor: "#22c55e",
+    paddingHorizontal: 20,
     paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: colors.secondary,
+    borderRadius: 30,
+    alignItems: "center",
   },
   buttonText: {
-    fontSize: 16,
-    fontFamily: fonts.regular,
-    color: colors.secondary,
+    color: "#fff",
+    fontWeight: "600",
+    marginLeft: 10,
   },
+  projects: {
+    flex: 1,
+    paddingTop: 20,
+  },
+  projectHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  projectTitleSection: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#1e293b",
+  },
+  seeAll: {
+    color: "#3b82f6",
+    fontWeight: "500",
+  },
+  projectCard: {
+    width: width * 0.6,
+    height: 150,
+    borderRadius: 16,
+    overflow: "hidden",
+    marginRight: 15,
+    position: "relative",
+  },
+  projectImage: {
+    width: "100%",
+    height: "100%",
+  },
+  overlay: {
+    position: "absolute",
+    bottom: 10,
+    left: 10,
+  },
+  projectTitle: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 16,
+  },
+  projectLabel: {
+    color: "#d1d5db",
+    fontSize: 12,
+  },
+  pagination: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+    gap: 6,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },  
 });
-
-export default Home;
