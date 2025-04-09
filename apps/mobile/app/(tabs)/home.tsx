@@ -35,7 +35,7 @@ export default function Home() {
       {/* Background with greeting */}
       <ImageBackground source={require("@/assets/images/WhatsApp Image 2025-02-24 at 09.19.33 (1).jpeg")} style={styles.header}>
         <Text style={styles.wave}>👋</Text>
-        <Text style={styles.title}>Hi User!,</Text>
+        <Text style={styles.title}>Hi User!</Text>
         <Text style={styles.subtitle}>Merci d'avoir choisie NAMBA</Text>
         <TouchableOpacity style={styles.button}>
           <Ionicons name="leaf-outline" size={20} color="#fff" />
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   pagination: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 10,
+    margin: 10,
     gap: 6,
   },
   dot: {

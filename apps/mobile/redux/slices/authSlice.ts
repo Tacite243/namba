@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from "../constantes";
+import { AppDispatch } from "../store";
 
 
 // Définition des types
@@ -30,21 +31,35 @@ interface AuthState {
 }
 
 // 🎯 Vérifier si l'utilisateur est encore authentifié
-export const checkAuthStatus = async (): Promise<boolean> => {
+export const checkAuthStatus = () => async (dispatch: AppDispatch): Promise<boolean> => {
   try {
-    const storedToken = await AsyncStorage.getItem("token");
-    const storedUser = await AsyncStorage.getItem("user");
-    const storedDate = await AsyncStorage.getItem("loginDate");
+    const [storedToken, storedUser, storedDate] = await AsyncStorage.multiGet([
+      'token',
+      'user',
+      'loginDate',
+    ]);
 
-    if (!storedToken || !storedUser || !storedDate) return false;
+    if (!storedToken[1] || !storedUser[1] || !storedDate[1]) return false;
 
-    const loginDate = new Date(storedDate);
+    const loginDate = new Date(storedDate[1]);
     const now = new Date();
-    const threeMonths = 90 * 24 * 60 * 60 * 1000; // 3 mois
+    const threeMonths = 90 * 24 * 60 * 60 * 1000;
 
-    return now.getTime() - loginDate.getTime() < threeMonths;
+    const isValid = now.getTime() - loginDate.getTime() < threeMonths;
+
+    if (isValid) {
+      dispatch(setAuthenticated(true));
+      dispatch({ type: "auth/loginUser/fulfilled", payload: {
+        token: storedToken[1],
+        user: JSON.parse(storedUser[1]),
+      }});
+      return true;
+    } else {
+      await AsyncStorage.multiRemove(['token', 'user', 'loginDate']);
+      return false;
+    }
   } catch (error) {
-    console.error("Erreur lors de la vérification de l'authentification :", error);
+    console.error('Erreur lors de la vérification de l’authentification :', error);
     return false;
   }
 };

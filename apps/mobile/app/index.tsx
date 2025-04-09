@@ -2,14 +2,23 @@ import React, { useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { colors } from '@/constants/Colors';
+import { checkAuthStatus, setAuthenticated } from '@/redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 
 const Index = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setTimeout(() => {
-      router.replace('/(auth)/login');
+    setTimeout( async () => {
+      const isLoggedIn = await dispatch<any>(checkAuthStatus());
+      dispatch(setAuthenticated(isLoggedIn));
+      if (isLoggedIn){
+        router.replace("/(tabs)/home");
+      } else {
+        router.replace("/(auth)/login");
+      }
     }, 3000);
   }, []);
 

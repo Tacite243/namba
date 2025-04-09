@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, TextInput, TouchableOpacity, Image, StyleSheet, Animated, ActivityIndicator, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, Image, StyleSheet, Animated, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ const LoginScreen = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const animation = new Animated.Value(isRegistering ? 1 : 0);
+  const [showPassword, setShowPassword] = useState(false)
 
   const dispatch = useDispatch();
   const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -37,17 +38,21 @@ const LoginScreen = () => {
   };
 
   // Fonction de connexion
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!phoneNumber || !password) return;
-    dispatch(loginUser({ phoneNumber, password }));
-    router.replace("/(tabs)/home")
+    const resultAction = await dispatch(loginUser({ phoneNumber, password }));
+    if (loginUser.fulfilled.match(resultAction)) {
+      router.replace("/(tabs)/home");
+    }
   };
 
   // Fonction d'inscription
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!name || !email || !phoneNumber || !password) return;
-    dispatch(registerUser({ name, email, phoneNumber, password }));
-    router.replace("/(tabs)/home")
+    const resultAction = await dispatch(registerUser({ name, email, phoneNumber, password }));
+    if (registerUser.fulfilled.match(resultAction)) {
+      router.replace("/(tabs)/home");
+    }
   };
 
   return (
@@ -64,7 +69,16 @@ const LoginScreen = () => {
           </>
         )}
         <TextInput style={styles.input} placeholder="Numéro de téléphone" value={phoneNumber} onChangeText={setPhoneNumber} />
-        <TextInput style={styles.input} placeholder="Mot de passe" secureTextEntry value={password} onChangeText={setPassword} />
+        <TextInput
+          style={styles.input}
+          placeholder="Mot de passe"
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <Text>{showPassword ? "Cacher" : "Afficher"} le mot de passe</Text>
+        </TouchableOpacity>
 
         {error && <Text style={styles.errorText}>{error}</Text>}
 
