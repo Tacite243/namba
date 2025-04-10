@@ -1,12 +1,10 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -17,14 +15,14 @@ enum Role {
 }
 
 model User {
-  id          String   @id @default(uuid())
-  name        String?
-  email       String?  @unique
-  password    String
-  role        Role     @default(CLIENT)
-  phoneNumber String   @unique
-  createdAt   DateTime @default(now())
-   // Relation avec les réservations en tant que client
+  id                 String        @id @default(uuid())
+  name               String?
+  email              String?       @unique
+  password           String
+  role               Role          @default(CLIENT)
+  phoneNumber        String        @unique
+  createdAt          DateTime      @default(now())
+  // Relation avec les réservations en tant que client
   clientReservations Reservation[] @relation(name: "ClientReservations")
 
   // Relation avec les réservations en tant que collecteur
@@ -32,117 +30,71 @@ model User {
 }
 
 model Service {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  image       String
-  like        Int      @default(0)
-  price       Float
-  unit        String
-  createdAt   DateTime @default(now())
+  id           String        @id @default(uuid())
+  name         String
+  description  String?
+  image        String
+  like         Int           @default(0)
+  price        Float
+  unit         String
+  createdAt    DateTime      @default(now())
   reservations Reservation[]
 }
 
 model Reservation {
-  id          String            @id @default(uuid())
+  id String @id @default(uuid())
 
-  client      User              @relation(name: "ClientReservations", fields: [clientId], references: [id])
-  clientId    String
+  // Lié au client
+  client   User   @relation(name: "ClientReservations", fields: [clientId], references: [id])
+  clientId String
 
-  service     Service           @relation(fields: [serviceId], references: [id])
-  serviceId   String
-
-  status      ReservationStatus @default(PENDING)
-
-  assignedTo  User?             @relation(name: "CollectorReservations", fields: [collectorId], references: [id])
+  // Lié au collecteur
+  collector   User?   @relation(name: "CollectorReservations", fields: [collectorId], references: [id])
   collectorId String?
 
-  createdAt   DateTime          @default(now())
+  // Lié au service choisi
+  service   Service @relation(fields: [serviceId], references: [id])
+  serviceId String
+
+  // Statuts
+  status         ReservationStatus @default(PENDING)
+  deliveryStatus DeliveryStatus    @default(NOT_STARTED)
+  processingTime ProcessingTime    @default(NORMAL_24H)
+
+  createdAt DateTime @default(now())
 
   // 📍 Adresse de collecte
-  pickupAddress String?
-  isCurrentLocation Boolean @default(false) // True si l'adresse est la position actuelle du client
-  latitude      Float? // Coordonnées GPS si position actuelle
-  longitude     Float?
-  
+  pickupAddress     String?
+  isCurrentLocation Boolean @default(false)
+  latitude          Float?
+  longitude         Float?
+
   // 📞 Contact du client
   whatsappNumber String?
-  email          String?
-
-  // 🧺 Détails du service
-  weightKg       Float
-  dirtinessLevel DirtinessLevel
-  processingTime ProcessingTime
-
-  // 📝 Articles sélectionnés
-  selectedItems  SelectedItem[]
-
-  // 📝 Remarques sur l'état des articles
-  itemRemarks    String?
 
   // 🗓 Date et heure de collecte
-  pickupDate     DateTime
-  pickupTime     String
+  pickupDate DateTime
+  pickupTime String
 
-  // 💰 Mode de paiement
-  paymentMethod  PaymentMethod
-
-  // 📝 Remarques et note additionelles
+  // 📝 Remarque du client
   additionalNotes String?
-
-  // prix total de la reservation
-  totalPrice Float
-
-  // statut de livraison
-  deliveryStatus DeliveryStatus @default(NOT_STARTED)
-
-  // Estimation de l'heure de livraison
-  estimatedDeliveryTime DateTime?
-}
-
-model SelectedItem {
-  id            String   @id @default(uuid())
-  reservation   Reservation @relation(fields: [reservationId], references: [id])
-  reservationId String
-  item          Item @relation(fields: [itemId], references: [id])
-  itemId        String
-  quantity      Int      @default(1)
-}
-
-model Item {
-  id        String @id @default(uuid())
-  name      String @unique
-  // Relation inverse avec SelectedItem
-  selectedItems SelectedItem[]
 }
 
 enum ReservationStatus {
-  PENDING   // En attente de traitement
+  PENDING // En attente de traitement
   CONFIRMED // Acceptée par un collecteur/admin
   COMPLETED // Réalisation confirmée
-  CANCELED  // Annulée
+  CANCELED // Annulée
 }
 
 enum DeliveryStatus {
   NOT_STARTED // Pas encore en livraison
   IN_PROGRESS // En cours de livraison
-  DELIVERED   // Livraison terminée
-}
-
-enum DirtinessLevel {
-  LEGER
-  MODERE
-  FORT
+  DELIVERED // Livraison terminée
 }
 
 enum ProcessingTime {
   EXPRESS_4H
   EXPRESS_8H
   NORMAL_24H
-}
-
-enum PaymentMethod {
-  CASH
-  MOBILE_MONEY
-  BANK_TRANSFER
 }

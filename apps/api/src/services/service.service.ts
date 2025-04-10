@@ -6,7 +6,7 @@ import prisma from "../config/db";
 export const createService = async (
     name: string,
     description: string,
-    image: any,
+    image: string,
     like: number = 0,
     price: number,
     unit: string = "pièce"
@@ -34,7 +34,29 @@ export const getAllServices = async () => {
 };
 
 /**
- * Supprimer un service (admin uniquement)
+ * Obtenir un service par ID
+ */
+export const getServiceById = async (serviceId: string) => {
+    return await prisma.service.findUnique({
+        where: { id: serviceId },
+    });
+};
+
+/**
+ * Mettre à jour un service
+ */
+export const updateService = async (
+    serviceId: string,
+    data: { name?: string; description?: string; image?: string; price?: number; unit?: string }
+) => {
+    return await prisma.service.update({
+        where: { id: serviceId },
+        data,
+    });
+};
+
+/**
+ * Supprimer un service
  */
 export const deleteService = async (serviceId: string) => {
     return await prisma.service.delete({

@@ -10,11 +10,24 @@ export default function TabsLayout() {
       {/* <NavMenu /> */}
       <Tabs
         screenOptions={{
-          headerShown: false, // Cache le header si non nécessaire
+          headerShown: false,
           tabBarActiveTintColor: colors.primary,
-          tabBarInactiveTintColor: colors.text,
+          tabBarInactiveTintColor: '#999',
           tabBarStyle: {
-            backgroundColor: colors.secondary,
+            backgroundColor: "#fff",
+            borderTopColor: colors.border,
+            borderTopWidth: 1,
+            paddingBottom: 6,
+            height: 60,
+            elevation: 10,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: -2 },
+            shadowOpacity: 0.05,
+            shadowRadius: 10,
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "500",
           },
         }}
       >

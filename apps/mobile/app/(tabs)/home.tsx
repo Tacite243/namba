@@ -1,39 +1,67 @@
-import React from "react";
-import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, FlatList, Image, Dimensions } from "react-native";
+import React, { useEffect } from "react";
+import {
+  View,
+  Text,
+  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { colors } from "@/constants/Colors";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchServices } from "@/redux/slices/serviceSlices";
+import { RootState, AppDispatch } from "@/redux/store";
+import { useRouter } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
-const projects = [
-  {
-    id: "1",
-    title: "Panama Reforestation Project",
-    label: "Gold Standard",
-    image: require("@/assets/images/WhatsApp Image 2025-02-24 at 09.19.33 (1).jpeg"), // Ajoute cette image dans assets
-  },
-  {
-    id: "2",
-    title: "Mauritan Project",
-    label: "Gold Standard",
-    image: require("@/assets/images/WhatsApp Image 2025-02-24 at 09.19.33 (1).jpeg"), // Ajoute cette image aussi
-  },
-];
-
 export default function Home() {
-  const renderProject = ({ item }: any) => (
-    <View style={styles.projectCard}>
-      <Image source={item.image} style={styles.projectImage} />
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+
+  const { services, loading, error } = useSelector(
+    (state: RootState) => state.services
+  );
+
+  useEffect(() => {
+    dispatch(fetchServices());
+  }, [dispatch]);
+
+  const renderService = ({ item }: any) => (
+    <TouchableOpacity
+      style={styles.projectCard}
+      onPress={() =>
+        router.push({
+          pathname: "/reservation",
+          params: {
+            serviceId: item.id,
+            name: item.name,
+            description: item.description,
+            image: item.image,
+            price: item.price,
+            unit: item.unit,
+          }
+        })
+      }
+    >
+      <Image source={{ uri: item.image }} style={styles.projectImage} />
       <View style={styles.overlay}>
-        <Text style={styles.projectTitle}>{item.title}</Text>
-        <Text style={styles.projectLabel}>{item.label}</Text>
+        <Text style={styles.projectTitle}>{item.name}</Text>
+        <Text style={styles.projectLabel}>{item.unit} - {item.price} $</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      {/* Background with greeting */}
-      <ImageBackground source={require("@/assets/images/WhatsApp Image 2025-02-24 at 09.19.33 (1).jpeg")} style={styles.header}>
+      <ImageBackground
+        source={require("@/assets/images/WhatsApp Image 2025-02-24 at 09.19.33 (1).jpeg")}
+        style={styles.header}
+      >
         <Text style={styles.wave}>👋</Text>
         <Text style={styles.title}>Hi User!</Text>
         <Text style={styles.subtitle}>Merci d'avoir choisie NAMBA</Text>
@@ -43,30 +71,31 @@ export default function Home() {
         </TouchableOpacity>
       </ImageBackground>
 
-      {/* Projects */}
       <View style={styles.projects}>
         <View style={styles.projectHeader}>
           <Text style={styles.projectTitleSection}>Nos services</Text>
           <Text style={styles.seeAll}>Voir plus !</Text>
         </View>
-        <FlatList
-          data={projects}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          renderItem={renderProject}
-          style={{ paddingLeft: 20 }}
-        />
-      </View>
-      <View style={styles.pagination}>
-        {projects.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.dot,
-              { backgroundColor: "#cbd5e1" },
-            ]}
+
+        {loading ? (
+          <ActivityIndicator size="large" color={colors.primary} />
+        ) : error ? (
+          <Text style={{ color: "red", paddingHorizontal: 20 }}>{error}</Text>
+        ) : (
+          <FlatList
+            data={services}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            renderItem={renderService}
+            style={{ paddingLeft: 20 }}
           />
+        )}
+      </View>
+
+      <View style={styles.pagination}>
+        {services.map((index: any) => (
+          <View key={index} style={[styles.dot, { backgroundColor: "#cbd5e1" }]} />
         ))}
       </View>
     </View>
@@ -76,7 +105,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8fafc",
+    backgroundColor: colors.background,
   },
   header: {
     height: 330,
@@ -96,14 +125,14 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: "#e2e8f0",
+    color: colors.tertiary,
     textAlign: "center",
     marginVertical: 10,
   },
   button: {
     marginTop: 15,
     flexDirection: "row",
-    backgroundColor: "#22c55e",
+    backgroundColor: colors.secondary,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 30,
@@ -126,11 +155,11 @@ const styles = StyleSheet.create({
   },
   projectTitleSection: {
     fontSize: 20,
-    fontWeight: "600",
-    color: "#1e293b",
+    fontWeight: "700",
+    color: colors.text,
   },
   seeAll: {
-    color: "#3b82f6",
+    color: colors.primary,
     fontWeight: "500",
   },
   projectCard: {
@@ -140,6 +169,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginRight: 15,
     position: "relative",
+    backgroundColor: "#ccc",
   },
   projectImage: {
     width: "100%",
@@ -147,8 +177,11 @@ const styles = StyleSheet.create({
   },
   overlay: {
     position: "absolute",
-    bottom: 10,
-    left: 10,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 10,
+    backgroundColor: "rgba(0,0,0,0.3)",
   },
   projectTitle: {
     color: "#fff",
@@ -156,7 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   projectLabel: {
-    color: "#d1d5db",
+    color: "#f1f5f9",
     fontSize: 12,
   },
   pagination: {
@@ -169,5 +202,6 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-  },  
+    backgroundColor: colors.border,
+  },
 });
