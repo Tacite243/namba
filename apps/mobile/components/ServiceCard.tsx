@@ -14,100 +14,101 @@ interface ServiceCardProps {
   onPress: () => void;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ image, price, unit, name, description, like, onPress }) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({
+  image, price, unit, name, description, like, onPress
+}) => {
   return (
     <View style={styles.card}>
-      {/* Image du service */}
       <Image
-        source={typeof image === 'string' ? { uri: image } : image} // Gère les deux cas
+        source={typeof image === 'string' ? { uri: image } : image}
         style={styles.image}
       />
 
-      {/* Prix et unité */}
-      <View style={styles.priceContainer}>
-        <Text style={styles.price}>${price}</Text>
-        <Text style={styles.unit}>{unit}</Text>
+      <View style={styles.infoContainer}>
+        <View style={styles.titleRow}>
+          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.price}>${price.toFixed(2)} <Text style={styles.unit}>/{unit}</Text></Text>
+        </View>
+
+        <Text style={styles.description} numberOfLines={2}>{description}</Text>
+
+        <View style={styles.rating}>
+          {[1, 2, 3, 4, 5].map((i) => (
+            <FontAwesome
+              key={i}
+              name="star"
+              size={16}
+              color={i <= like ? colors.secondary : '#ccc'}
+            />
+          ))}
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={onPress}>
+          <Text style={styles.buttonText}>Réserver</Text>
+        </TouchableOpacity>
       </View>
-
-      {/* Nom et description du service */}
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.description}>{description}</Text>
-
-      {/* Avis utilisateurs en étoiles */}
-      <View style={styles.likeContainer}>
-        {[1, 2, 3, 4, 5].map((i) => (
-          <FontAwesome key={i} name="star" size={18} color={i <= like ? colors.primary : colors.background} />
-        ))}
-      </View>
-
-      {/* Bouton de réservation */}
-      <TouchableOpacity style={styles.button} onPress={onPress}>
-        <Text style={styles.buttonText}>Réserver</Text>
-      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.secondary,
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 15,
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    marginBottom: 20,
+    overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
     elevation: 3,
-    width: '100%',
   },
   image: {
     width: '100%',
-    height: 150,
-    borderRadius: 10,
+    height: 160,
   },
-  priceContainer: {
+  infoContainer: {
+    padding: 15,
+  },
+  titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
-    paddingHorizontal: 5,
-  },
-  price: {
-    fontSize: 16,
-    fontFamily: fonts.bold,
-    color: colors.primary,
-  },
-  unit: {
-    fontSize: 14,
-    fontFamily: fonts.regular,
-    color: colors.background,
+    alignItems: 'center',
   },
   name: {
     fontSize: 18,
     fontFamily: fonts.bold,
+    color: colors.text,
+  },
+  price: {
+    fontSize: 16,
+    fontFamily: fonts.medium,
     color: colors.primary,
-    marginTop: 10,
+  },
+  unit: {
+    fontSize: 13,
+    color: '#888',
   },
   description: {
+    marginTop: 6,
     fontSize: 14,
     fontFamily: fonts.regular,
-    color: colors.text,
-    marginTop: 5,
+    color: '#555',
   },
-  likeContainer: {
+  rating: {
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 8,
   },
   button: {
+    marginTop: 12,
     backgroundColor: colors.primary,
-    paddingVertical: 10,
     borderRadius: 8,
+    paddingVertical: 10,
     alignItems: 'center',
-    marginTop: 15,
   },
   buttonText: {
-    color: colors.secondary,
     fontFamily: fonts.bold,
+    color: '#fff',
     fontSize: 16,
   },
 });

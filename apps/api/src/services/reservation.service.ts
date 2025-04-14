@@ -52,24 +52,11 @@ export const createReservation = async (data: any) => {
             latitude,
             longitude,
             whatsappNumber,
-            email,
-            weightKg,
-            dirtinessLevel,
             processingTime,
-            itemRemarks,
             pickupDate: new Date(pickupDate),
             pickupTime,
-            paymentMethod,
             additionalNotes,
-            // discount,
-            totalPrice,
             deliveryStatus: "NOT_STARTED",
-            selectedItems: {
-                create: selectedItems.map((item: { itemId: string; quantity: number }) => ({
-                    itemId: item.itemId,
-                    quantity: item.quantity,
-                })),
-            },
         },
     })
 }
