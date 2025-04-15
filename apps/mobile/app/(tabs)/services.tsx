@@ -7,6 +7,8 @@ import { fetchServices } from '@/redux/slices/serviceSlices';
 import ServiceCard from '@/components/ServiceCard';
 import { colors } from '@/constants/Colors';
 import { fonts } from '@/constants/fonts';
+// import LottieView from '@/components/lottieWrapper';
+
 
 const Services = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,11 +24,16 @@ const Services = () => {
     if (loading) {
       return (
         <View style={styles.feedbackContainer}>
-          <ActivityIndicator size="large" color={colors.yellow} />
-          <Text style={styles.feedbackText}>Chargement des services...</Text>
+          {/* <LottieView
+            source={require('@/assets/images/lottie/Animation - 1744621377701/animations/9448cd81-81ac-49f4-928d-05501fe11073.json')}
+            autoPlay
+            loop
+            style={{ width: 200, height: 200 }}
+          /> */}
+          <Text style={styles.feedbackText}>Chargement des services en cours...</Text>
         </View>
       );
-    }
+    }    
 
     if (error) {
       return (

@@ -9,17 +9,11 @@ interface ReservationData {
     latitude: number | null;
     longitude: number | null;
     whatsappNumber: string;
-    email: string;
-    weightKg: number;
-    dirtinessLevel: string;
     processingTime: string;
     pickupDate: string;
     pickupTime: string;
-    paymentMethod: string;
     additionalNotes: string;
-    totalPrice: number;
-    selectedItems: any[];
-    itemRemarks: string;
+    serviceId: string;
 }
 
 interface ReservationState {
