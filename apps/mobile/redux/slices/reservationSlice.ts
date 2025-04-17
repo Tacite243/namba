@@ -27,14 +27,20 @@ export const createReservation = createAsyncThunk(
     "reservation/create",
     async (formValues: ReservationData) => {
         try {
-            const clientId = await AsyncStorage.getItem("id");
-            if (!clientId) throw new Error("Client ID introuvable");
+            const storedUser = await AsyncStorage.getItem("user");
+            if (!storedUser) throw new Error("Utilisateur non authentifié");
+
+            const user = JSON.parse(storedUser);
+            const clientId = user.id;
 
             const reservationData = { ...formValues, clientId }
-            
+            console.log("reservationData envoyé :", reservationData);
             const response = await axios.post(`${API_URL}/reservation/create`, reservationData);
             return response.data;
         } catch (error: any) {
+            console.log(await AsyncStorage.getItem('id'));
+
+            console.error(error);
             throw new Error(error.response?.data?.message || "Erreur lors de la réservation");
         }
     }

@@ -14,17 +14,11 @@ export const createReservation = async (data: any) => {
         latitude,
         longitude,
         whatsappNumber,
-        email,
         weightKg,
-        dirtinessLevel,
         processingTime,
-        selectedItems,
-        itemRemarks,
         pickupDate,
         pickupTime,
-        paymentMethod,
         additionalNotes,
-        // discount,
     } = data;
 
     // Vérifier si le service existe

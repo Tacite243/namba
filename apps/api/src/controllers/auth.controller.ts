@@ -5,10 +5,18 @@ import { handleAsync } from "../middlewares/errorHandler";
 import prisma from "../config/db";
 
 
-export const register = handleAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { name, email, password, role = "CLIENT", phoneNumber } = req.body;
-  const user = await registerUser(name, email, password, role as Role, phoneNumber);
-  res.status(201).json(user);
+export const register = handleAsync(async (req: Request, res: Response) => {
+  try {
+    const { name, email, password, role = "CLIENT", phoneNumber } = req.body;
+    const user = await registerUser(name, email, password, role as Role, phoneNumber);
+    res.status(201).json(user);
+  } catch (error: any) {
+    if (error.message.includes("existe déjà")) {
+      res.status(409).json({ message: error.message });
+    } else {
+      throw error; // sera attrapé par handleAsync ou middleware global
+    }
+  }
 });
 
 

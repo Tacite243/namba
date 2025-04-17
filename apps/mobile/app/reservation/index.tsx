@@ -19,10 +19,9 @@ import * as Location from "expo-location";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { createReservation, resetState } from "@/redux/slices/reservationSlice";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { colors } from "@/constants/Colors";
 
-// Active LayoutAnimation on Android
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
@@ -49,39 +48,44 @@ const Reservation = () => {
   const { success, loading, error } = useSelector((state: RootState) => state.reservation);
   const { serviceId, name, description, image } = useLocalSearchParams();
   const imageUrl = Array.isArray(image) ? image[0] : image;
-  const [state, setState] = useReducer(reducer, initialState);
-  const { handleSubmit } = useForm();
 
-  const getLocation = async () => {
+  const [state, setState] = useReducer(reducer, initialState);
+  const { control, handleSubmit, setValue } = useForm();
+
+  const getLocation = async (): Promise<{ latitude: number; longitude: number } | null> => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         Alert.alert("Permission refusée", "Activez la localisation pour utiliser cette fonctionnalité.");
-        return;
+        return null;
       }
 
       const location = await Location.getCurrentPositionAsync({});
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      setState({ name: "latitude", value: location.coords.latitude });
-      setState({ name: "longitude", value: location.coords.longitude });
+      const coords = location.coords;
+
+      setState({ name: "latitude", value: coords.latitude });
+      setState({ name: "longitude", value: coords.longitude });
       setState({
         name: "pickupAddress",
-        value: `Lat: ${location.coords.latitude}, Lon: ${location.coords.longitude}`,
+        value: `Lat: ${coords.latitude}, Lon: ${coords.longitude}`,
       });
-    } catch {
+
+      return { latitude: coords.latitude, longitude: coords.longitude };
+    } catch (err) {
       Alert.alert("Erreur", "Impossible de récupérer votre position.");
+      return null;
     }
   };
 
-  useEffect(() => {
-    if (state.isCurrentLocation) {
-      getLocation();
-    } else {
-      setState({ name: "latitude", value: null });
-      setState({ name: "longitude", value: null });
-      setState({ name: "pickupAddress", value: "" });
-    }
-  }, [state.isCurrentLocation]);
+  // useEffect(() => {
+  //   if (state.isCurrentLocation) {
+  //     getLocation();
+  //   } else {
+  //     setState({ name: "latitude", value: null });
+  //     setState({ name: "longitude", value: null });
+  //     setState({ name: "pickupAddress", value: "" });
+  //   }
+  // }, [state.isCurrentLocation]);
 
   useEffect(() => {
     if (success) {
@@ -90,13 +94,47 @@ const Reservation = () => {
     }
   }, [success]);
 
-  const handleReservation = () => {
-    dispatch(
-      createReservation({
+  const handleReservation = async () => {
+    console.log(state.isCurrentLocation);
+
+    if (state.isCurrentLocation) {
+      const location = await getLocation();
+      console.log("Location récupérée:", location);
+
+      if (!location) {
+        Alert.alert("Adresse incomplète", "La position actuelle n'a pas pu être récupérée. Veuillez réessayer.");
+        return;
+      }
+
+      // S'assurer que les valeurs sont correctement mises à jour
+      const cleanedData = {
         ...state,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        pickupAddress: `Lat: ${location.latitude}, Lon: ${location.longitude}`,
+        whatsappNumber: state.whatsappNumber.trim(),
+        pickupDate: state.pickupDate.trim(),
+        pickupTime: state.pickupTime.trim(),
+        additionalNotes: state.additionalNotes.trim(),
         serviceId: String(serviceId),
-      })
-    );
+      };
+      dispatch(createReservation(cleanedData));
+    } else {
+      if (state.pickupAddress.trim() === "") {
+        Alert.alert("Adresse incomplète", "Veuillez entrer une adresse de ramassage.");
+        return;
+      }
+
+      const cleanedData = {
+        ...state,
+        whatsappNumber: state.whatsappNumber.trim(),
+        pickupDate: state.pickupDate.trim(),
+        pickupTime: state.pickupTime.trim(),
+        additionalNotes: state.additionalNotes.trim(),
+        serviceId: String(serviceId),
+      };
+      dispatch(createReservation(cleanedData));
+    }
   };
 
   return (
@@ -106,14 +144,17 @@ const Reservation = () => {
       contentContainerStyle={{ paddingBottom: 30 }}
     >
       {imageUrl && <Image source={{ uri: imageUrl }} style={styles.image} />}
-
       <Text style={styles.title}>{name}</Text>
       <Text style={styles.description}>{description}</Text>
 
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          state.isCurrentLocation && { backgroundColor: "#ddd", color: "#888" },
+        ]}
         placeholder="Adresse de ramassage"
         value={state.pickupAddress}
+        editable={!state.isCurrentLocation}
         onChangeText={(text) => setState({ name: "pickupAddress", value: text })}
       />
 
@@ -123,6 +164,7 @@ const Reservation = () => {
           value={state.isCurrentLocation}
           onValueChange={() =>
             setState({ name: "isCurrentLocation", value: !state.isCurrentLocation })
+
           }
           trackColor={{ false: "#ccc", true: colors.primary }}
           thumbColor={state.isCurrentLocation ? colors.secondary : "#f4f3f4"}
@@ -196,6 +238,7 @@ const Reservation = () => {
 };
 
 export default Reservation;
+
 
 const styles = StyleSheet.create({
   container: {

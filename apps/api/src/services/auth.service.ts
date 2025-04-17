@@ -23,9 +23,49 @@ const isValidRole = (role: string): role is Role => Object.values(Role).includes
 /**
  * Inscription utilisateur.
  */
-export const registerUser = async (name: string, email: string, password: string, role: Role = Role.CLIENT, phoneNumber: string) => {
+export const registerUser = async (
+  name: string,
+  email: string,
+  password: string,
+  role: Role = Role.CLIENT,
+  phoneNumber: string
+) => {
   if (!isValidRole(role)) {
     throw new Error("Rôle invalide.");
+  }
+
+  const existingUser = await prisma.user.findUnique({
+    where: { phoneNumber },
+  });
+
+  if (existingUser) {
+    throw new Error("Un utilisateur avec ce numéro existe déjà.");
+  }
+
+  const hashedPass = await hashedPassword(password, SALT_ROUNDS);
+
+  return prisma.user.create({
+    data: { name, email, password: hashedPass, role, phoneNumber },
+  });
+};
+
+export const registerAdmin = async (
+  name: string,
+  email: string,
+  password: string,
+  role: Role = Role.SUPER_ADMIN,
+  phoneNumber: string
+) => {
+  if (!isValidRole(role)) {
+    throw new Error("Rôle invalide.");
+  }
+
+  const existingUser = await prisma.user.findUnique({
+    where: { phoneNumber },
+  });
+
+  if (existingUser) {
+    throw new Error("Un utilisateur avec ce numéro existe déjà.");
   }
 
   // Hash du mot de passe avant de l'assigner
@@ -36,22 +76,23 @@ export const registerUser = async (name: string, email: string, password: string
   });
 };
 
-export const registerAdmin = async (name: string, email: string, password: string, role: Role = Role.SUPER_ADMIN, phoneNumber: string) => {
+export const registerCollector = async (
+  name: string,
+  email: string,
+  password: string,
+  role: Role = Role.ADMIN,
+  phoneNumber: string
+) => {
   if (!isValidRole(role)) {
     throw new Error("Rôle invalide.");
   }
 
-  // Hash du mot de passe avant de l'assigner
-  const hashedPass = await hashedPassword(password, SALT_ROUNDS);
-
-  return prisma.user.create({
-    data: { name, email, password: hashedPass, role, phoneNumber: phoneNumber },
+  const existingUser = await prisma.user.findUnique({
+    where: { phoneNumber },
   });
-};
 
-export const registerCollector = async (name: string, email: string, password: string, role: Role = Role.ADMIN, phoneNumber: string) => {
-  if (!isValidRole(role)) {
-    throw new Error("Rôle invalide.");
+  if (existingUser) {
+    throw new Error("Un utilisateur avec ce numéro existe déjà.");
   }
 
   // Hash du mot de passe avant de l'assigner
